@@ -1,0 +1,33 @@
+{% extends 'admin/dashboard.html' %}
+{% block content %}
+    <div class="container">
+    <h1>Liste des derniers utilisateurs connécté</h1>
+    {% if historique %}
+        <div class="table-responsive">
+        <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Nom</th>
+            <th scope="col">Prénom</th>
+            <th scope="col">Nom d'utilisateur</th>
+            <th scope="col">Email</th>
+            <th scope="col">Dèrnier connéxion</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for donne in historique %}
+        <tr>
+            <td>{{ donne.first_name }}</td>
+            <td>{{ donne.last_name }}</td>
+            <td>{{ donne.username }}</td>
+            <td>{{ donne.email }}</td>
+            <td>{{ donne.last_login }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+        </div>
+    {% endif %}
+    </div>
+
+{% endblock %}

@@ -1,0 +1,653 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+   <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet"><script src="{% static 'assets/js/jquery-3.7.1.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'assets/css/navbar.css'%}">
+     <script src="https://kit.fontawesome.com/ae360af17e.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'assets/admin/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendor/fonts/boxicons.css' %}" />
+     <link rel="stylesheet" href="{% static 'assets/fonts/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/Easy-Contact-Form.css' %}">
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="{% static 'assets/vendor/css/core.css' %}" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="{% static 'assets/vendor/css/theme-default.css' %}" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="{% static 'assets/css/demo.css' %}" />
+  <link rel="stylesheet" href="{% static 'assets/vendor/css/pages/page-auth.css' %}" />
+    <!-- Helpers -->
+    <script src="{% static 'assets/vendor/js/helpers.js' %}"></script>
+    <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
+    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
+    <script src="{% static 'assets/js/config.js' %}"></script>
+<!-- Ajoutez ces lignes à votre fichier HTML -->
+    <!-- Vendors CSS -->
+    <link rel="stylesheet" href="{% static 'assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}" />
+    <title>Assurance ARO - Administrateur</title>
+</head> 
+<body>
+ <div class="wrapper">
+        <aside id="sidebar" class="js-sidebar" style="background-color : #58a618;z-index : 9999">
+            <!-- Content For Sidebar -->
+            <div class="h-100">
+                <ul class="sidebar-nav">
+                    <li class="sidebar-header">
+                        Ajout et liste des données
+                    </li>
+                <li class="sidebar-item {% if active_page == 'stat' or active_page == 'stat' %}active{% endif %}">
+                        <a href="/stat" class="sidebar-link">
+                            <i class="fa-solid fa-list pe-2"></i>
+                            Statistique
+                        </a>
+                    </li>
+                    <li class="sidebar-item {% if active_page == 'admin_accueil' or active_page == 'dashboard' %}active{% endif %}">
+                        <a href="/dashboard" class="sidebar-link">
+                            <i class="fa-solid fa-list pe-2"></i>
+                            Dashboard
+                        </a>
+                    </li>
+                {% if perms.vitrine.add_service %}
+                    <li class="sidebar-item {% if active_page == 'ajout_service' %}active{% endif %}">
+                        <a href="/ajout_service" class="sidebar-link">
+                            <i class="fas fa-shield-alt pe-2"></i>
+                            Ajout service
+                        </a>
+                    </li>
+                {% endif %}
+                {% if perms.vitrine.add_departement %}
+                    <li class="sidebar-item {% if active_page == 'ajout_departement' %}active{% endif %}">
+                        <a href="/ajout_departement" class="sidebar-link">
+                            <i class="fas fa-building pe-2"></i>
+                            Ajout département
+                        </a>
+                    </li>
+                {% endif %}
+                {% if perms.vitrine.add_article %}
+                    <li class="sidebar-item {% if active_page == 'ajout_actualite' %}active{% endif %}">
+                        <a href="/ajout_actualite" class="sidebar-link">
+                            <i class="fas fa-newspaper pe-2"></i>
+                            Ajout actualité
+                        </a>
+                    </li>
+                {% endif %}
+                {% if perms.vitrine.add_apropos %}
+                    <li class="sidebar-item {% if active_page == 'ajout_apropos' %}active{% endif %}">
+                        <a href="/ajout_apropos" class="sidebar-link">
+                            <i class="bi bi-info-circle pe-2"></i> 
+                            Ajout a-propos
+                        </a>
+                    </li>
+                {% endif %}
+                {% if perms.vitrine.add_prix %}
+                    <li class="sidebar-item {% if active_page == 'ajout_prix' %}active{% endif %}">
+                        <a href="/ajout_prix" class="sidebar-link">
+                            <i class="fas fa-tags pe-2"></i>
+                            Ajout prix
+                        </a>
+                    </li>
+                {% endif %}
+                {% if perms.vitrine.add_autre %}
+                <li class="sidebar-item {% if active_page == 'ajout_autre' %}active{% endif %}">
+                        <a href="/ajout_autre" class="sidebar-link">
+                            <i class="fas fa-pencil pe-2"></i>
+                            Autre modification du site
+                        </a>
+                    </li>
+                {% endif %}
+                    <li class="sidebar-header">
+                        Autre options
+                    </li>
+                  
+                {% if user.is_superuser %}
+                 <li class="sidebar-item">
+                        <a href="/new_users" class="sidebar-link {% if active_page == 'new_users' %}active{% endif %}">
+                            <i class="fas fa-user-plus pe-2"></i>
+                            Nouveau utilisateur
+                        </a>
+                    </li>
+                 <li class="sidebar-item">
+                        <a href="/historique" class="sidebar-link {% if active_page == 'historique' %}active{% endif %}">
+                            <i class="fas fa-history pe-2"></i>
+                            Historique de connéxion
+                        </a>
+                    </li>
+                {% endif %}
+                {% if perms.auth.change_group %}
+                 <li class="sidebar-item">
+                        <a href="/groupe" class="sidebar-link {% if active_page == 'groupes' %}active {% endif %} ">
+                            <i class="bi bi-people pe-2"></i>
+                          Géstion des groupes d'utilisateurs
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="/create_groupe" class="sidebar-link {% if active_page == 'create_groupes' %}active {% endif %} ">
+                            <i class="bi bi-people pe-2"></i>
+                          Création des groupes
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="/edit_or_delete_groupe" class="sidebar-link {% if active_page == 'edit_groupes' %}active {% endif %} ">
+                            <i class="bi bi-people pe-2"></i>
+                          Modif/suppr des groupes
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="/permission" class="sidebar-link {% if active_page == 'permission' %}active {% endif %} ">
+                            <i class="fas fa-lock pe-2"></i>
+                        Permission spécifique
+                        </a>
+                    </li>
+                {% endif %}
+                {% if perms.auth.change_user %}
+                 <li class="sidebar-item">
+                        <a href="/users" class="sidebar-link {% if active_page == 'users' %}active{% endif %} ">
+                            <i class="bi bi-person-lines-fill pe-2"></i>
+                            Géstion des utilisateurs
+                        </a>
+                    </li>
+                {% endif %}
+                 <li class="sidebar-item">
+                        <a href="/logout" class="sidebar-link ">
+                            <i class="fas fa-sign-out-alt pe-2"></i>
+                            Déconnexion
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+        <div class="main bg-light" >
+            <nav class="navbar navbar-expand px-3 border-bottom" style="background-color :#58a618 ">
+                <button class="btn btn-light" id="sidebar-toggle" type="button">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse navbar">
+                    <ul class="navbar-nav">
+                        <li class="nav-item"><button id="aide">bouton d'aide</button></li>
+                        <h4 class="text-white text-center mx-3">{{ request.user.username }}</h4> 
+
+                        <li class="nav-item dropdown">
+                            <a href="#" data-bs-toggle="dropdown" class="nav-icon pe-md-0">
+                                <img src="{% static 'assets/img/logo.png' %}" class="avatar img-fluid w-100 h-150" alt="">
+                            </a>
+                          
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+           {% block content %}
+               {% include 'admin/accueil.html' %}
+           {% endblock %}
+           
+        <!-- Modal pour la modification -->
+        {% include 'admin/modal_files/service.html' %}
+        {% include 'admin/modal_files/prix.html' %}
+        {% include 'admin/modal_files/departement.html' %}
+        {% include 'admin/modal_files/actualite.html' %}
+        {% include 'admin/modal_files/groupe.html' %}
+        {% include 'admin/modal_files/aide.html' %}
+        {% include 'admin/modal_files/confirmation.html' %}
+        {% include 'admin/modal_files/permission.html' %}
+       
+        </div>
+    </div>
+
+ 
+ <!--<script>
+$(document).ready(function(){
+    $('.link').click(function(e){
+        e.preventDefault();
+        link = $(this).attr("href");
+        $.ajax({
+            url: link,
+        })
+        .done(function(html){
+            $('#content').empty().append(html);
+            $('.navbar a').removeClass('active'); // Retire la classe 'active' de tous les liens de navigation
+            $(this).addClass('active'); // Ajoute la classe 'active' au lien cliqué
+        })
+        .fail(function(){
+            console.log("Erreur lors du chargement du contenu.");
+        })
+        .always(function(){
+            console.log("En cours...");
+        });
+    });
+});
+</script>
+-->
+    <script src="{% static 'assets/admin/js/script.js' %}"></script>
+ <script src="{% static 'assets/vendor/libs/jquery/jquery.js' %}"></script>
+    <script src="{% static 'assets/vendor/libs/popper/popper.js' %}"></script>
+    <script src="{% static 'assets/vendor/js/bootstrap.js' %}"></script>
+    <script src="{% static 'assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js' %}"></script>
+    <script src="{% static 'assets/vendor/js/menu.js' %}"></script>
+     <script type="module" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.js"></script>
+
+</script>
+    <!-- endbuild -->
+    <!-- Vendors JS -->
+    <!-- Main JS -->
+    <!-- Page JS -->
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+ <script>
+     // Lorsque le bouton "Modifier" est cliqué
+$('.btnModifier').click(function() {
+    // Récupérer l'identifiant de la donnée à modifier depuis l'attribut de données personnalisé
+    var id = $(this).data('id');
+    // Envoyer une requête AJAX pour récupérer les détails de la donnée à modifier
+    $.ajax({
+        url: "get_service",
+        type: "GET",
+        data: {'id': id},
+        success: function(response) {
+            // Mettre à jour les champs du formulaire avec les détails récupérés
+            $('#nom').val(response.nom);
+            $('#description').val(response.description);
+            $('#icone').val(response.icone);
+            $('#idDonnee').val(id);
+            // etc.
+            // Afficher la modal de modification
+            $('#modalModifier').modal('show');
+        }
+    });
+});
+$('.delete_permission').click(function(){
+    var id = $(this).data('id');
+    $('#btnDeletePermission').attr('href', '/delete_permission/'+id)
+    $('#modalDeletePermission').modal('show')
+})
+
+$('.btnModifierActualite').click(function() {
+    // Récupérer l'identifiant de la donnée à modifier depuis l'attribut de données personnalisé
+    var id = $(this).data('id');
+
+    // Envoyer une requête AJAX pour récupérer les détails de la donnée à modifier
+    $.ajax({
+        url: "get_actualite",
+        type: "GET",
+        data: {'id': id},
+        success: function(response) {
+            // Mettre à jour les champs du formulaire avec les détails récupérés
+            $('#titre').val(response.titre);
+            $('#descriptionActualite').val(response.description);
+            $('#idDonneeActualite').val(id);
+          
+            // etc.
+
+            // Afficher la modal de modification
+            $('#modalModifierActualite').modal('show');
+        }
+    });
+});
+$('.btnModifierPrix').click(function() {
+    // Récupérer l'identifiant de la donnée à modifier depuis l'attribut de données personnalisé
+    var id = $(this).data('id');
+
+    // Envoyer une requête AJAX pour récupérer les détails de la donnée à modifier
+    $.ajax({
+        url: "get_prix",
+        type: "GET",
+        data: {'id': id},
+        success: function(response) {
+            // Mettre à jour les champs du formulaire avec les détails récupérés
+            $('#nomPrix').val(response.nom);
+            $('#prix').val(response.prix);
+            $('#idDonneePrix').val(id);
+            $('#iconePrix').val(response.icone);
+            
+          
+            // etc.
+
+            // Afficher la modal de modification
+            $('#modalModifierPrix').modal('show');
+        }
+    });
+});
+     
+
+$('.btnModifierDepartement').click(function(){
+    // Récupérer l'identifiant de la donnée à modifier depuis l'attribut de données personnalisé
+    var id = $(this).data('id');
+
+    // Envoyer une requête AJAX pour récupérer les détails de la donnée à modifier
+    $.ajax({
+        url: "get_departement",
+        type: "GET",
+        data: {'id': id},
+        success: function(response) {
+            // Mettre à jour les champs du formulaire avec les détails récupérés
+            $('#nomDepartement').val(response.nom);
+            $('#descriptionDepartement').val(response.description);
+            $('#idDonneeDepartement').val(id);
+          
+            // etc.
+
+            // Afficher la modal de modification
+            $('#modalModifierDepartement').modal('show');
+        }
+    });
+});
+
+
+     
+
+
+$('#formAuthenticationPrix').submit(function(event) {
+    event.preventDefault(); // Empêcher le comportement par défaut du formulaire
+    
+    // Récupérer l'identifiant de la donnée à partir du champ caché
+    var id = $('#idDonneePrix').val();
+
+    $.ajax({
+        url: "edit_prix",
+        type: "POST",
+        data: $(this).serialize() + "&idDonneePrix=" + id,
+        success: function(response) {
+            alert('modification réussi')
+            $('#modalModifierPrix').modal('hide');
+        }
+    });
+});
+     // Soumettre le formulaire de modification avec AJAX
+$('#formAuthentication').submit(function(event) {
+    event.preventDefault(); 
+    
+    var id = $('#idDonnee').val();
+    var formData = new FormData(this);
+    formData.append('idDonnee', id); 
+    $.ajax({
+        url: "edit_service",
+        type: "POST",
+        data:formData,
+         processData: false, // Ne pas traiter les données
+        contentType: false,// Ajouter l'identifiant de la donnée à la requête
+        success: function(response) {
+            alert('modification réussi')
+            $('#modalModifier').modal('hide');
+        }
+    });
+});
+
+$('#formAuthenticationActualite').submit(function(event) {
+    event.preventDefault(); // Empêcher le comportement par défaut du formulaire
+    
+    // Récupérer l'identifiant de la donnée à partir du champ caché
+    var id = $('#idDonneeActualite').val();
+    
+    // Créer un objet FormData pour envoyer le formulaire multipart
+    var formData = new FormData(this);
+    formData.append('idDonneeActualite', id); // Ajouter l'ID au formData si nécessaire
+
+    $.ajax({
+        url: "edit_actualite",
+        type: "POST",
+        data: formData,
+        processData: false, // Ne pas traiter les données
+        contentType: false, // Ne pas définir le type de contenu
+        success: function(response) {
+            alert('modification d\'actualité réussi')
+            $('#modalModifierActualite').modal('hide');
+        }
+    });
+});
+
+
+$('#formAuthenticationDepartement').submit(function(event) {
+    event.preventDefault(); // Empêcher le comportement par défaut du formulaire
+    
+    // Récupérer l'identifiant de la donnée à partir du champ caché
+    var id = $('#idDonneeDepartement').val();
+    
+    // Créer un objet FormData pour envoyer le formulaire multipart
+    var formData = new FormData(this);
+    formData.append('idDonneeDepartement', id); // Ajouter l'ID au formData
+
+    $.ajax({
+        url: "edit_departement",
+        type: "POST",
+        data: formData,
+        processData: false, // Ne pas traiter les données
+        contentType: false, // Ne pas définir le type de contenu
+        success: function(response) {
+            alert("Modification du département réussi")
+            $('#modalModifierDepartement').modal('hide');
+        }
+    });
+});
+
+$('#formAuthenticationGroupe').submit(function(event) {
+    event.preventDefault(); // Empêcher le comportement par défaut du formulaire
+    
+    // Récupérer l'identifiant de la donnée à partir du champ caché
+    var id = $('#idDonneeGroupe').val();
+    $.ajax({
+        url: "edit_groupe",
+        type: "POST",
+        data: $(this).serialize() + "&idDonneeGroupe=" + id,
+        enctype : "multipart/form-data", // Ajouter l'identifiant de la donnée à la requête
+        success: function(response) {
+            alert("Modification du groupe réussi")
+            $('#modalModifierGroupe').modal('hide');
+        }
+    });
+});
+
+
+$('.btnSuprimerService').click(function() {
+    var id = $(this).data('id');
+   $.ajax({
+        url: "get_service",
+        type: "GET",
+        data: {'id': id},
+        success: function(response) {
+            // Mettre à jour les champs du formulaire avec les détails récupérés
+            $('#id_service').val(id);
+             $('#modalSupprimer').modal('show');
+        }
+    });
+   
+});
+
+
+
+
+$('.btnSuprimerDepartement').click(function() {
+    var id = $(this).data('id');
+   $.ajax({
+        url: "get_departement",
+        type: "GET",
+        data: {'id': id},
+        success: function(response) {
+            // Mettre à jour les champs du formulaire avec les détails récupérés
+            $('#id_departement').val(id);
+             $('#modalSupprimerDepartement').modal('show');
+        }
+    });
+});
+
+$('.btnSuprimerActualite').click(function() {
+    var id = $(this).data('id');
+   $.ajax({
+        url: "get_actualite",
+        type: "GET",
+        data: {'id': id},
+        success: function(response) {
+            // Mettre à jour les champs du formulaire avec les détails récupérés
+            $('#id_actualite').val(id);
+             $('#modalSupprimerActualite').modal('show');
+        }
+    });
+});
+
+$('.btnSuprimerPrix').click(function() {
+    var id = $(this).data('id');
+   $.ajax({
+        url: "get_prix",
+        type: "GET",
+        data: {'id': id},
+        success: function(response) {
+            // Mettre à jour les champs du formulaire avec les détails récupérés
+            $('#id_prix').val(id);
+             $('#modalSupprimerPrix').modal('show');
+        }
+    });
+});
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Vérifier si le nom du cookie correspond à notre jeton CSRF
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+$("#btnConfirmerSupprimerPrix").submit(function(event){
+    event.preventDefault();
+    var id = $('#id_prix').val();
+    var csrftoken = getCookie('csrftoken');
+    
+    $.ajax({
+        url: "delete_prix",
+        type: "POST",
+                data: $(this).serialize() + "&id_prix=" + id,
+        headers: {'X-CSRFToken': csrftoken},
+        // Ajouter l'identifiant de la donnée à la requête
+        success: function(response) {
+            alert('Supression réussi')
+            $('#modalSupprimerPrix').modal('hide');
+        }
+    });
+})
+     
+     $("#btnConfirmerSupprimerService").submit(function(event){
+    event.preventDefault();
+    var id = $('#id_service').val();
+    var csrftoken = getCookie('csrftoken');
+    
+    $.ajax({
+        url: "delete_service",
+        type: "POST",
+               data: $(this).serialize() + "&id_service=" + id,
+        headers: {'X-CSRFToken': csrftoken},
+        // Ajouter l'identifiant de la donnée à la requête
+        success: function(response) {
+            alert('Supression réussi')
+            $('#modalSupprimer').modal('hide');
+        }
+    });
+})
+     $("#btnConfirmerSupprimerDepartement").submit(function(event){
+    event.preventDefault();
+    var id = $('#id_departement').val();
+    var csrftoken = getCookie('csrftoken');
+    
+    $.ajax({
+        url: "delete_departement",
+        type: "POST",
+                data: $(this).serialize() + "&id_departement=" + id,
+
+        headers: {'X-CSRFToken': csrftoken},
+        // Ajouter l'identifiant de la donnée à la requête
+        success: function(response) {
+            alert('Supression réussi')
+            $('#modalSupprimerDepartement').modal('hide');
+        }
+    });
+})
+     $("#btnConfirmerSupprimerActualite").submit(function(event){
+    event.preventDefault();
+    var id = $('#id_actualite').val();
+    var csrftoken = getCookie('csrftoken');
+    
+    $.ajax({
+        url: "delete_actualite",
+        type: "POST",
+                data: $(this).serialize() + "&id_actualite=" + id,
+        headers: {'X-CSRFToken': csrftoken},
+        // Ajouter l'identifiant de la donnée à la requête
+        success: function(response) {
+            alert('Supression réussi')
+            $('#modalSupprimerActualite').modal('hide');
+        }
+    });
+})
+     function remplirSelectMultipleToutesPermissions(permissions) {
+    // Parcourir toutes les permissions disponibles
+         $('#permissionGroupe').empty()
+    permissions.forEach(function(permission) {
+        // Ajouter une option au select multiple pour chaque permission
+        $('#permissionGroupe').append('<option value="' + permission.id + '">' + permission.nom + '</option>');
+    });
+}
+
+// Fonction pour sélectionner automatiquement les options correspondantes dans le select multiple
+function selectionnerPermissionsPossedees(permissionsPossedees) {
+    // Parcourir les permissions possédées
+    permissionsPossedees.forEach(function(permission) {
+        // Sélectionner l'option correspondante dans le select multiple
+        $('#permissionGroupe').find('option[value="' + permission.id + '"]').prop('selected', true);
+    });
+}
+
+     $('.edit_groupe').click(function() {
+    // Récupérer l'identifiant de la donnée à modifier depuis l'attribut de données personnalisé
+    var id = $(this).data('id');
+
+    // Envoyer une requête AJAX pour récupérer les détails de la donnée à modifier
+    $.ajax({
+        url: "get_groupe",
+        type: "GET",
+        data: {'id': id},
+        success: function(response) {
+            // Mettre à jour les champs du formulaire avec les détails récupérés
+            $('#nomGroupe').val(response.nom);
+            $('#idDonneeGroupe').val(response.id);
+            remplirSelectMultipleToutesPermissions(response.allPermission);
+            selectionnerPermissionsPossedees(response.permission);
+            // Afficher la modal de modification
+            $('#modalModifierGroupe').modal('show');
+        }
+    });
+});
+
+$('#aide').click(function(){$('#modalAide').modal('show')});
+
+ $('.supprimer').click(function() {
+    // Afficher le modal de confirmation
+     console.log("coucou")
+     var id = $(this).data('id')
+     $('.btnSupprimer').attr('href', "/delete_groupe/"+id+"/{{ default_user.id }}")
+    $('#modalConfirmation').modal('show');
+  });
+  // Ajouter un événement de clic au bouton de confirmation
+  $('.delete_groupe').click(function() {
+    // Afficher le modal de confirmation
+     console.log("coucou")
+     var id = $(this).data('id')
+     $('.btnSupprimerGroupe').attr('href', "/delete_groupe_by_id/"+id)
+    $('#modalDeleteGroupe').modal('show');
+  });
+  $('.delete_user').click(function(){
+    // Afficher le modal de confirmation
+     console.log("coucou")
+     var id = $(this).data('id')
+     $('.btnSupprimerUser').attr('href', "/delete_user/"+id)
+    $('#modalDeleteUser').modal('show');
+  });
+ </script>
+</body>
+</html>

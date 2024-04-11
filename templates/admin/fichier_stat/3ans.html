@@ -1,0 +1,156 @@
+{% extends 'admin/stat.html' %}
+{% block content %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2"></script>
+<div class="container">
+<div class="row p-2">
+          
+                <div class="col-sm-12 col-md-4 col-lg-4">
+                      <form action="/graphe"  method="post">
+                      {% csrf_token %}
+                    <label for="" class="form-label">Séléctionner ce que vous voulez afficher :</label>
+                    <select name="graphe" id="" class="form-select m-1 p-1">
+                        <option value="parMois" {% if graphe_select == "parMois" %}selected{% endif %}>Contenus par mois</option>
+                        <option value="3mois" {% if graphe_select == "3mois" %}selected{% endif %}>3 dèrniers mois</option>
+                        <option value="3annes" {% if graphe_select == "3annes" %}selected{% endif %}>3 dèrniers années</option>
+                        <option value="anne" {% if graphe_select == "anne" %}selected{% endif %}>cette année</option>
+                        <option value="mois" {% if graphe_select == "mois" %}selected{% endif %}>cette mois</option>
+                    </select>
+                          <button type="submit" class="btn btn-outline-success btn-sm">Afficher</button>
+                          </form>
+                </div>
+                <div class="col-sm-12 col-md-4 col-lg-4">
+                    <form action="/anne" class="d-flex" method="post">
+                        <input type="number" class="form-control" placeholder="Date spécifique" required>
+                        <button type="submit" class="btn btn-outline-success btn-sm">Afficher</button>
+                    </form>
+                </div>
+            <div class="col-sm-12 col-md-4 col-lg-4">
+                <form action="/mois" class="d-flex" method="post">
+                    <input type="text" placeholder="Mois spécifique" name="mois" class="form-control" required>
+                    <button type="submit" class="btn btn-outline-success btn-sm">Afficher</button>
+                </form>
+            </div>
+            
+        </div>
+    <div class="row">
+
+        <div class="col-6">
+            <canvas id="chart_service" width="400" height="400"></canvas>
+        </div>
+         <div class="col-6">
+            <canvas id="chart_departement" width="400" height="400"></canvas>
+        </div>
+        <div class="col-6">
+            <canvas id="chart_article" width="400" height="400"></canvas>
+        </div>
+        <div class="col-6">
+
+        </div>
+    </div>
+    </div>
+
+    <script>
+    
+    
+    // Chart du departement
+const ctx_departement = document.getElementById('chart_departement').getContext('2d');
+const data_departement = {{ departement|safe }};
+console.log(data_departement);
+
+const labels_departement = [];
+const counts_departement = [];
+
+data_departement.forEach((donne) => {
+  labels_departement.push(donne.annee);
+  counts_departement.push(donne.nombre_contenus);
+});
+
+const chart_departement = new Chart(ctx_departement, {
+  type: 'bar',
+  data: {
+    labels: labels_departement, // Use the contents of the array
+    datasets: [{
+      label: 'Nombre de département introduit par mois',
+      data: counts_departement,
+      backgroundColor: 'rgba(229,199,204,0.2)',
+      borderColor: 'rgb(180,185,117)',
+      borderWidth: 1
+    }]
+  },
+  options: {
+    scales: {
+      y: {
+        beginAtZero: true
+      }
+    }
+  }
+});
+//chart article
+const ctx_article = document.getElementById('chart_article').getContext('2d');
+const data_actualite = {{ actualite|safe }};
+console.log(data_actualite);
+
+const labels_actualite = [];
+const counts_actualite = [];
+
+data_actualite.forEach((donne) => {
+  labels_actualite.push(donne.annee);
+  counts_actualite.push(donne.nombre_contenus);
+});
+
+const chart_actualite = new Chart(ctx_article, {
+  type: 'bar',
+  data: {
+    labels: labels_actualite, // Use the contents of the array
+    datasets: [{
+      label: 'Nombre d\'actualité introduit  introduit par mois',
+      data: counts_actualite,
+      backgroundColor: 'rgba(229,199,204,0.2)',
+      borderColor: 'rgb(180,185,117)',
+      borderWidth: 1
+    }]
+  },
+  options: {
+    scales: {
+      y: {
+        beginAtZero: true
+      }
+    }
+  }
+});
+
+  //chart service
+   const ctx = document.getElementById('chart_service').getContext('2d');
+  const data = {{ service|safe }};
+  console.log(data);
+
+  const labels = [];
+  const counts = [];
+
+  data.forEach((item) => {
+    labels.push(item.annee);
+    counts.push(item.nombre_contenus);
+  });
+
+  const chart_service = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Nombre de service introduit par mois',
+        data: counts,
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+    </script>
+{% endblock %}

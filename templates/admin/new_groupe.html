@@ -1,0 +1,35 @@
+{% extends 'admin/dashboard.html' %}
+{% block content %}
+    <div class="container m-2">
+    <div class="card">
+        <div class="card-body">
+            <form action="/add_groupe" method="post" class="row">
+            {% csrf_token %}
+                <div class="col-6">
+                    <div class="mb-3">
+                        <label for="nom" class="form-label">Nom du groupe :</label>
+                    <input type="text" name="nom"  class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-outline-primary">Créer</button>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="mb-3">
+                        <label for="permission" class="form-label">Liste des permissions :</label>
+                        {% if permission %}
+                        <select name="permission" id="" class="form-select" style="height:400px" multiple>
+                        {% for donne in permission %}
+                            <option value="{{ donne.id }}">{{ donne.name }}</option>
+                        {% endfor %}
+                        </select>
+                        {% endif %}
+                    </div>
+                </div>
+                
+            </form>
+        </div>
+    </div>
+    </div>
+    {% include "admin/message.html" %}
+{% endblock %}

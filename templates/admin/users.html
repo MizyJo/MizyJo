@@ -1,0 +1,49 @@
+{% extends 'admin/dashboard.html' %}
+{% block content %}
+    <div class="container mt-sm-2">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center">Utilisateurs</h3>
+                </div>
+                <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Prénom</th>
+                            <th>Nom d'utilisateur</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        {% if users %}
+                        <tbody>
+                        {% for donne in users %}
+                        <tr>
+                            <td>{{ donne.first_name }}</td>
+                            <td>{{ donne.last_name }}</td>
+                            <td>{{ donne.username }}</td>
+                            <td>{{ donne.email }}</td>
+                            <td>{% if donne.is_active == True %}<p class="text-success"><i class="fas fa-check-circle pe-2"></i>Activé</p>{% else  %}<p class="text-danger"><i class="fas fa-times-circle pe-2"></i>Désactivé</p>{% endif %}</td>
+                            <td>
+                                {% if donne.is_active == False %}
+                                <a class="btn btn-outline-success btn-sm" href="/statut/{{ donne.id }}"><i class="fas fa-toggle-on pe-2"></i>Activé</a>
+                                {% else %}
+                                    <a class="btn btn-outline-danger btn-sm" href="/statut/{{ donne.id }}"><i class="fas fa-toggle-off pe-2"></i>Désactivé</a>
+                                    <button type="button" data-id="{{ donne.id }}"  class="btn btn-danger btn-sm delete_user" ><i class="bi bi-trash"></i></button>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                        {% endif %}
+                    </table>
+                </div>
+                </div>
+    </div>
+</div>
+    
+    {% include 'admin/message.html' %}
+{% endblock %}

@@ -1,0 +1,215 @@
+ <main class="content px-3 py-2">
+                <div class="container-fluid">
+                    <div class="mb-3">
+                        <h4 class="text-dark">Admin Dashboard</h4>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-md-12 col-lg-12">
+                        {% if perms.vitrine.view_service %}
+                           <div class="card border-0">
+                        <div class="card-header">
+                            <h5 class="card-title">
+                                Listes des services
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                         <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Nom du service</th>
+                                        <th scope="col">Description</th>
+                                        <th scope="col">icone</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
+                                {% if service %}
+                                <tbody>
+                                  {% for donne in service %}
+                                    <tr>
+                                       <td>{{ donne.nom }}</td>
+                                        <td>{{ donne.description }}</td>
+                                        <td>{{ donne.icone }}</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                {% if perms.vitrine.change_service %}
+                                                <button id="btnOuvrirModifier" class="btn btn-outline-primary btn-sm btnModifier" data-id="{{ donne.id }}"><i class="bi bi-pencil"></i></button>
+                                                {% endif %}
+                                                {% if perms.vitrine.delete_service %}
+                                                <button id="btnOuvrirSupprimer" class="btn btn-outline-danger btn-sm btnSuprimerService" data-id="{{ donne.id }}"><i class="bi bi-trash"></i></button>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                  {% endfor %}
+                                   
+                                </tbody>
+                                {% endif %}
+                            </table>
+                         </div>
+                        </div>
+                    </div>
+                        {% endif %}
+                        {% if perms.vitrine.view_article %}
+                                  <div class="card border-0">
+                        <div class="card-header">
+                            <h5 class="card-title">
+                                Listes des actualités
+                            </h5>
+
+                        </div>
+                        <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Titre</th>
+                                        <th scope="col">Désctiption</th>
+                                        <th scope="col">URL photo</th>
+                                        <th scope="col">Date</th>
+                                        
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
+                                {% if article %}
+                                <tbody>
+                                {% for donne in article %}
+                                    <tr>
+                                       <td>{{ donne.titre }}</td>
+                                        <td>{{ donne.description }}</td>
+                                        <td>{{ donne.image_url }}</td>
+                                        <td>{{ donne.date }}</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                {% if perms.vitrine.change_article %}
+                                                <button data-id="{{ donne.id }}" class="btn btn-outline-primary btn-sm btnModifierActualite"><i class="bi bi-pencil"></i></button>
+                                                {% endif %}
+                                                {% if perms.vitrine.delete_article %}
+                                                <button data-id="{{ donne.id }}" class="btn btn-outline-danger btn-sm btnSuprimerActualite"><i class="bi bi-trash"></i></button>
+                                                {% endif %}
+                                               
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                   
+                                </tbody>
+                                {% endif %}
+                            </table>
+                        </div>
+                        </div>
+                    </div>
+                        {% endif %}
+                          
+                        </div>
+                        <div class="col-12 col-md-12 col-lg-12">
+                        {% if perms.vitrine.view_departement %}
+                             <div class="card border-0">
+                        <div class="card-header">
+                            <h5 class="card-title">
+                                Listes des départements
+                            </h5>
+
+                        </div>
+                        <div class="card-body">
+                         <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Nom du département</th>
+                                        <th scope="col">Déscription</th>
+                                        <th scope="col">URL photo</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
+                                {% if departement %}
+                                <tbody>
+                                   {% for donne in departement %}
+                                    <tr>
+                                        <td>{{ donne.nom }}</td>
+                                        <td>{{ donne.description }}</td>
+                                        <td>{{ donne.image_url }}</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                {% if perms.vitrine.change_departement %}
+                                                <button data-id="{{ donne.id }}" class="btn btn-outline-primary btn-sm btnModifierDepartement"><i class="bi bi-pencil"></i></button>
+                                                {% endif %}
+                                                {% if perms.vitrine.delete_departement %}
+                                                <button data-id="{{ donne.id }}" class="btn btn-outline-danger btn-sm btnSuprimerDepartement" ><i class="bi bi-trash"></i></button>
+                                                {% endif %}
+                                            
+                                            </div>
+                                        </td>
+                                    </tr>
+                                   {% endfor %}
+                                   
+                                </tbody>
+                                {% endif %}
+                            </table>
+                         </div>
+                        </div>
+                    </div>
+                        {% endif %}
+                        {% if perms.vitrine.view_prix %}
+                          <div class="card border-0">
+                        <div class="card-header">
+                            <h5 class="card-title">
+                               Listes des prix
+                            </h5>
+
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Nom du service</th>
+                                        <th scope="col">Prix par ans</th>
+                                        <th scope="col">icone</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
+                                {% if prix %}
+                                <tbody>
+                                    {% for donne in prix %}
+                                    <tr>
+                                        <td>{{ donne.nom }}</td>
+                                        <td>{{ donne.prix }} Ar</td>
+                                        <td>{{ donne.icone }}</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                {% if perms.vitrine.change_prix %}
+                                                <button data-id="{{ donne.id }}" class="btn btn-outline-primary btn-sm btnModifierPrix"><i class="bi bi-pencil"></i></button>
+                                                {% endif %}
+                                                {% if perms.vitrine.delete_prix %}
+                                                <button data-id="{{ donne.id }}" class="btn btn-outline-danger btn-sm btnSuprimerPrix"><i class="bi bi-trash"></i></button>
+                                                {% endif %}
+                                            {% if perms.vitrine.change_prix %}
+                                                <button class="btn btn-outline-dark btn-sm"><i class="bi bi-arrow-repeat"></i></button>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                   {% endfor %}
+                                </tbody>
+                                {% endif %}
+                            </table>
+                            </div>
+                        </div>
+                    </div>
+                        {% endif %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-md-6 col-lg-6">
+              
+                           
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-6">
+            
+                        </div>
+                    </div>
+                    <!-- Table Element -->
+
+                </div>
+            </main>

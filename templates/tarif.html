@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title  %}Assurance ARO - Tarifs {% endblock %}
+
+{% block content %}
+<div class="container">
+    <br><br>
+ <div class="section-title">
+       <h2>Tarifs</h2>
+     <p>Comparez nos offres et trouvez l'assurance qui vous convient</p>
+ </div>
+{% if prix %}
+  <div class="row mt-4">
+   {% for donne in prix %}
+    <div class="col-md-4 mb-4">
+      <div class="card h-100 text-center" data-aos="fade-up" data-aos-delay="100">
+        <i class="{{ donne.icone }} fa-3x mt-3"></i>
+        <div class="card-body">
+          <h5 class="card-title">{{ donne.nom }}</h5>
+          <p class="card-text">à partir de {{donne.prix }} Ar par an</p>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+  </div>
+{% endif %}
+</div>
+
+{% endblock%}

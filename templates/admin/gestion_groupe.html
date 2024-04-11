@@ -1,0 +1,50 @@
+{% extends 'admin/dashboard.html' %}
+{% block content %}
+    <div class="card m-3 p-3">
+    <div class="card-header">
+        <h2 class="text-center">Liste des groupes existants</h2>
+    </div>
+        <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>id</th>
+                            <th>Nom du groupe</th>
+                            <th>Permission du groupe</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        {% if groupes %}
+                        <tbody>
+                        {% for donne in groupes %}
+                        <tr>
+                            <td>{{ donne.id }}</td>
+                            <td>{{ donne.name }}</td>
+                            <td>
+                                
+                                <ul>
+                                {% for permission in donne.permissions.all %}
+                                    <li>
+                                        {{ permission.name }}
+                                    </li>
+                                {%  endfor %}
+                                </ul>
+                                   
+                            </td>
+                            <td>
+                                <div class="button-group">
+                                    <button class="btn btn-outline-primary edit_groupe" id="edit_groupe" data-id="{{ donne.id }}"><i class="fas fa-edit"></i></button>
+                                    <button class="btn btn-outline-danger delete_groupe"  data-id="{{ donne.id }}"><i class="fas fa-trash-alt"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                        {% endif %}
+                    </table>
+        </div>     
+    </div>
+    </div>
+    {% include 'admin/message.html' %}
+{% endblock %}

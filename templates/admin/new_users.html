@@ -1,0 +1,57 @@
+{% extends 'admin/dashboard.html' %}
+{% load static %}
+{% block title %}Admin-nouvelle utilisateur{% endblock %}
+
+{%block content %}
+    <div class="row">
+    <div class="col-1"></div>
+    <div class="col-10">
+        <div class="card">
+            <div class="card-body">
+                
+                   <center> <img src="{% static 'img/new users.png' %}" alt="" height="250px" width="250px"  class="mx-auto"> </center>
+                    
+                <form action="register_users" class="row g-3" method="post">
+                    {% csrf_token %}
+                    <div class="form-group mb-2 col-6">
+                        <input type="text" name="nom" id="nomUsers" placeholder="Entrer votre nom" class="form-control form-control-lg">
+                    </div>
+                    <div class="form-group mb-2 col-6">
+                        <input type="text" name="prenom" id="prenomUsers" placeholder="Entrer votre prénom" class="form-control form-control-lg">
+                    </div>
+                    <div class="form-group mb-2 col-12">
+                        <input type="email" name="email" id="emailUsers" placeholder="Entrer votre E-mail" class="form-control form-control-lg">
+                    </div>
+                    <div class="form-group mb-2 col-6">
+                        <input type="text" name="pseudo" id="pseudo" placeholder="Entrer votre nom d'utilisateur" class="form-control form-control-lg">
+                    </div>
+                    <div class="form-group mb-2 col-6">
+                        <input type="password" name="password" id="password" placeholder="Mot de passe" class="form-control form-control-lg">
+                    </div>
+                    <div class="form-group mb-2 col-6">
+                        <input type="password" name="confpass" id="confpass" placeholder="Confirmer le mot de passe" class="form-control form-control-lg">
+                    </div>
+                    {% if group %}
+                        
+                    <div class="mb-2 form-group col-6">
+                        <label for="group" class="form-label">Groupes d'utilisateurs :</label>
+                        <select name="group" id="group" class="form-select p-1">
+                            {% for donne in group %}
+                            <option value="{{ donne.name }}">{{ donne.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="mb-3 form-group">
+                        <button type="submit" class="btn btn-primary btn-lg">Ajouter</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-1"></div>
+    </div>
+    
+    {% include 'admin/message.html' %}
+{% endblock %}

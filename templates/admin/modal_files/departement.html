@@ -1,0 +1,143 @@
+{% load static %}
+<div class="modal fade" id="modalModifierDepartement">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Modifier les données</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container-xxl">
+      <div class="authentication-wrapper authentication-basic container-p-y">
+        <div class="authentication-inner">
+          <!-- Register -->
+          <div class="card" style="box-shadow: 0 0 0 0 ">
+            <div class="card-body">
+              <!-- Logo -->
+              <div class="app-brand justify-content-center">
+                <a href="index.html" class="app-brand-link gap-2">
+                  <span class="app-brand-text demo text-body fw-bolder"><img src="{% static 'assets/img/logo.png' %}" width="50px" height="65px" alt=""></span>
+                </a>
+              </div>
+              <!-- /Logo -->
+              <h5 class="mb-2 text-center">Départements</h5>
+              <form id="formAuthenticationDepartement" class="mb-3" enctype="multipart/form-data" >
+                  {% csrf_token %}
+                <div class="mb-3">
+                  <label for="email" class="form-label">Nom du département </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="nomDepartement"
+                    name="nom"
+                    value = ""
+                    placeholder="Nom du département"
+                    autofocus
+                  />
+                </div>
+              <div class="mb-3">
+                  <input
+                    type="hidden"
+                    class="form-control"
+                    id="idDonneeDepartement"
+                    name="idDonnee"
+                    placeholder="id"
+                    autofocus
+                  />
+                </div>
+                <div class="mb-3 form-password-toggle">
+                  <div class="d-flex justify-content-between">
+                    <label class="form-label" for="password">Déscription</label>
+                   
+                  </div>
+                  <div class="input-group input-group-merge">
+                    <textarea
+                      
+                      id="descriptionDepartement"
+                      class="form-control"
+                      name="description"
+                      placeholder="Entrer la déscription du département"
+                      aria-describedby="déscription"
+                    ></textarea>
+                      
+                  </div>
+                </div>
+                  <div class="mb-3">
+                          <label for="icone" class="form-label">Image</label>
+                          <input type="file" id="imageDepartement" placeholder="image du département" class="form-control" name="image">
+                      </div>
+                  <br>
+                <div class="mb-3">
+                  <center><button class="btn btn-primary btn-outline-success d-grid w-50" type="submit">Modifier</button></center>
+                </div>
+                  <br>
+                  {% if error_message %} 
+                      <div
+                        class="bs-toast toast fade show bg-danger"
+                        role="alert"
+                        aria-live="assertive"
+                        aria-atomic="true"
+                      >
+                        <div class="toast-header">
+                          <i class="bx bx-bell me-2"></i>
+                          <div class="me-auto fw-semibold">Erreur</div>
+
+                          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                        <div class="toast-body">
+                          {{ error_message }}
+                        </div>
+                      </div>
+                  {% endif %}
+                  {% if success_message %} 
+                       <div
+                        class="bs-toast toast fade show bg-success"
+                        role="alert"
+                        aria-live="assertive"
+                        aria-atomic="true"
+                      >
+                        <div class="toast-header">
+                          <i class="bx bx-bell me-2"></i>
+                          <div class="me-auto fw-semibold">Succès</div>
+                          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                        <div class="toast-body">
+                          {{ success_message }}
+                        </div>
+                      </div>
+                  {% endif %}
+              
+              </form>
+            </div>
+          </div>
+          <!-- /Register -->
+        </div>
+      </div>
+    </div>
+      </div>
+    </div>
+  </div>
+</div>
+            
+
+
+ <div class="modal fade" id="modalSupprimerDepartement">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Supprimer les données</h5>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+         <form id="btnConfirmerSupprimerDepartement">
+             {% csrf_token %}
+              <input type="hidden" id="id_departement" name="id">
+              <p>Êtes-vous sûr de vouloir supprimer ce département ?</p>
+        <button type="submit" class="btn btn-danger btn-sm" >Confirmer</button>
+          </form>
+        
+      </div>
+    </div>
+  </div>
+</div>
+

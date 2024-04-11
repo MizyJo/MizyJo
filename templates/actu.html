@@ -1,0 +1,44 @@
+ {% load static %}
+{% if article %}
+    <div class="section-title">
+          <h2>Actualité</h2>
+            <p>Vous verez ici les actualités de notre company.</p>
+        </div>
+    <!-- slider -->
+    <div class="slider">
+        <!-- list Items -->
+        <div class="list">
+            {% for donne in article %}
+            <div class="item {% if forloop.first %}active{% endif %}">
+                <img src="{% static donne.image_url %}">
+                <div class="content">
+                    <h2 class="text-white">{{ donne.titre }}</h2>
+                    <br>
+                    <p class="text-white">
+                        {{ donne.description }}
+                        <br><br>
+                        {{ donne.date }}
+                   
+                    </p>
+                    <br>
+                    
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <!-- button arrows -->
+        <div class="arrows">
+            <button id="prev"><</button>
+            <button id="next">></button>
+        </div>
+        <!-- thumbnail -->
+        <div class="thumbnail">
+                {% for donne in article %}
+            <div class="item {% if forloop.first %}active{% endif %}">
+                <img src="{% static donne.image_url %}">
+                
+            </div>
+                {% endfor %}
+        </div>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" style="z-index:10;position:absolute;bottom:-3px"><path fill="#1d5c42" fill-opacity="1" d="M0,320L80,304C160,288,320,256,480,250.7C640,245,800,267,960,240C1120,213,1280,139,1360,101.3L1440,64L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"></path></svg>    </div>
+{% endif %}

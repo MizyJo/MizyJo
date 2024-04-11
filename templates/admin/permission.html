@@ -1,0 +1,79 @@
+{% extends 'admin/dashboard.html' %}
+{% block content %}
+    <div class="card m-2">
+    <div class="card-body">
+        {% csrf_token %}
+    <div class="row">
+            {% if users %}
+            <div class="col-sm-12 col-md-6 col-lg-6">
+             <form action="/view_permissions"  method="post">
+             {% csrf_token %}
+                 <label for="" class="form-label">Nom d'utilisateur :</label>
+             <div class="d-flex">
+                <select name="user" id="" class="form-select p-1">
+                    {% for donne in users %}
+                    <option value="{{ donne.id }}" {% if donne == default_user %}selected{% endif %}>{{ donne.username }}</option>
+                    {% endfor %}
+                </select>
+            <button type="submit"  class="btn btn-outline-warning btn-sm mx-2">Vérifier</button>
+             </div>
+            </form>               
+            {% if user_permissions and user_permissions is not None %}
+                <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>nom</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for donne in user_permissions %}
+                    <tr>
+                        <td>{{ donne.id }}</td>
+                        <td>{{ donne.name }}</td>
+                        <td><button type="button" data-id="{{ donne.id }}/{{ default_user.id }}"  class="btn btn-outline-danger btn-sm delete_permission">Supprimer</button></td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                </div>
+                {% elif user_permissions.exists and user_permissions is None %}
+                 <h3 class="text-center text-secondary m-5">L'utilisateur choisi ne possède pas de permission</h3>
+                {% else %}
+                <h3 class="text-center text-secondary m-5">Choisissez d'abord un utlilisateur ensuite cliquez sur vérifier pour voir les permisions de l'utilisateur séléctionné</h3>
+            {% endif %}
+             </div>
+                                                         
+            {% endif %}
+        {% if permissions %}
+             <div class="col-sm-12 col-md-6 col-lg-6">
+              <form  action="/attribuer_permission" method="post">
+              {% csrf_token %}
+               <label for="nom" class="form-label">Nom d'utilisateur:</label>
+              <div class="d-flex">
+                  <select name="user" id="" class="form-select p-1" required>
+                      {% for donne in users %}
+                      <option value="{{ donne.id }}" {% if donne == default_user %}selected{% endif %}>{{ donne.username }}</option>
+                      {% endfor %}
+                  </select>
+                <button type="submit"  class="btn btn-outline-info btn-sm mx-2">Attribuer</button>
+              </div>
+                 
+                     <label for="" class="form-label">Liste de tous les permissions :</label>
+                 <select name="permission" id="" class="form-select" multiple required style="min-height: 600px">
+                {% for donne in permissions %}
+                    <option value="{{ donne.id }}" >{{ donne.name }}
+                    </option>
+                {% endfor %}
+                 </select>
+              </form>
+              
+            </div>
+        {% endif %}
+    </div>
+    </div>
+    </div>
+    {% include "admin/message.html" %}
+{% endblock %}

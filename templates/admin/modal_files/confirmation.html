@@ -1,0 +1,42 @@
+<div class="modal fade" id="modalConfirmation">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Supprimer les données</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+              <p>Êtes-vous sûr de vouloir supprimer ?</p>
+          <a  class="btn btn-danger btn-sm btnSupprimer">Confirmer</a>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="modalDeleteGroupe">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Supprimer les données</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+              <p>Êtes-vous sûr de vouloir supprimer ce groupe?</p>
+          <a href="/delete_groupe_by_id/{{ donne.id }}" class="btn btn-danger btn-sm btnSupprimerGroupe">Confirmer</a>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="modalDeleteUser">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Supprimer les données</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+              <p>Êtes-vous sûr de vouloir supprimer cette utilisateur ?</p>
+          <a href="/delete_user/{{ donne.id }}" class="btn btn-danger btn-sm btnSupprimerUser">Confirmer</a>
+      </div>
+    </div>
+  </div>
+</div>

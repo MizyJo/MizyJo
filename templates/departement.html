@@ -9,16 +9,15 @@ Assurance ARO - Départements
       <div class="container">
           <br>
         <div class="section-title">
-          <h2>Départements</h2>
-            <p>Ces départements sont responsables de différentes fonctions au sein de l'entreprise, telles que la vente, la gestion des risques, la finance, les ressources humaines, les technologies de l'information, la communication, le juridique, le contrôle interne, l'audit interne, la réassurance et la gestion des sinistres.</p>
-
+          <h2>Agences</h2>
+<p>Explorez notre réseau d'agences assurances ARO, des points d'accès dédiés où notre équipe compétente vous accompagne dans la protection de ce qui compte le plus pour vous. Bienvenue chez ARO, votre partenaire pour une tranquillité d'esprit assurée</p>
         </div>
 
         <div class="row gy-4">
-        {% if departement %}
+        {% if agence %}
           <div class="col-lg-3">
             <ul class="nav nav-tabs flex-column" style="padding:4px;">
-            {% for donne in departement %}
+            {% for donne in agence %}
               <li class="nav-item">
                 <a class="nav-link p-2 {% if forloop.first %}active{% endif %} show" data-bs-toggle="tab" href="#tab-{{ donne.id }}">{{ donne.nom }}</a>
               </li>
@@ -28,15 +27,16 @@ Assurance ARO - Départements
           </div>
           <div class="col-lg-9">
             <div class="tab-content">
-                {% for donne in departement %}
+                {% for donne in agence %}
               <div class="tab-pane {% if forloop.first %}active{% endif %} show" id="tab-{{ donne.id }}">
                 <div class="row gy-4">
                   <div class="col-lg-8 details order-2 order-lg-1">
                     <h3>{{ donne.nom }}</h3>
-                      <p>{{ donne.description }}</p>
+                      <p>{{ donne.rue }}</p>
+                      <p>Téléphone : {{ donne.telephone }}</p>
                   </div>
                   <div class="col-lg-4 text-center order-1 order-lg-2">
-                    <img src="{% static donne.image_url %}" alt="" class="img-fluid">
+                    <img src="{{ donne.photo.url }}" alt="" class="img-fluid">
                   </div>
                 </div>
               </div>

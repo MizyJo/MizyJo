@@ -55,6 +55,8 @@
                         </tbody>
                     </table>
                     </div>
+                    {% else %}
+                    <h3 class="text-secondary text-center m-5">Si ce texte s'affiche, soit vous n'avez pas encore effectué de vérification, soit l'utilisateur n'est affilié à aucun groupe d'utilisateurs.</h3>
                 {% endif %}
                 </div>
             </div>
@@ -74,7 +76,7 @@
                                 {% if users %}
                             <select name="nomUsers" id="" class="form-select p-1" style="max-height:200px">
                             {% for donne in users %}
-                                <option value="{{ donne.id }}">{{ donne.username }}</option>
+                                <option value="{{ donne.id }}" {% if donne == default_user %}selected{% endif %}>{{ donne.username }}</option>
                             {% endfor %}
                             </select>
                                 {% endif %}

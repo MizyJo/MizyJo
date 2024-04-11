@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'vitrine',
+    'google_analytics',
 ]
 
 MIDDLEWARE = [
@@ -130,3 +131,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Définissez l'URL de base pour les fichiers médias
 MEDIA_URL = '/media/'
+
+GOOGLE_ANALYTICS = {
+    'google_analytics_id': 'G-PNCDKE7K2Q',  # Remplacez par votre propre ID de suivi
+}

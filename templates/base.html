@@ -1,8 +1,10 @@
 {% load static %}
+{% load google_analytics_tags %}
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
+ {% google_analytics %}
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
@@ -69,13 +71,11 @@
   <li><a class="nav-link scrollto {% if active_page == 'accueil' %}active{% endif %}" href="{% url 'accueil' %}">Accueil</a></li>
   <li><a class="nav-link scrollto {% if active_page == 'about' %}active{% endif %}" href="{% url 'about' %}">A-propos</a></li>
   <li><a class="nav-link scrollto {% if active_page == 'service' %}active{% endif %}" href="{% url 'service' %}">Services</a></li>
-  <li><a class="nav-link scrollto {% if active_page == 'departement' %}active{% endif %} " href="{% url 'departement' %}">Départements</a></li>
+  <li><a class="nav-link scrollto {% if active_page == 'departement' %}active{% endif %} " href="{% url 'agence' %}">Agence</a></li>
   <li><a class="nav-link scrollto {% if active_page == 'contact' %}active{% endif %}" href="{% url 'contact' %}">Contact</a></li>
 </ul>  
         <i class="bi bi-list mobile-nav-toggle mx-3"></i>
       </nav><!-- .navbar -->
-
-      <a href="tarif" class="appointment-btn scrollto"><span class="d-none d-md-inline">Voir les</span> tarifs</a>
 
     </div>
   </header>

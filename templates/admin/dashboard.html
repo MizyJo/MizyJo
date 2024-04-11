@@ -1,7 +1,9 @@
 {% load static %}
+{% load google_analytics_tags %}
 <!doctype html>
 <html lang="en">
 <head>
+     {% google_analytics %}
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
@@ -42,14 +44,14 @@
                     </li>
                 <li class="sidebar-item {% if active_page == 'stat' or active_page == 'stat' %}active{% endif %}">
                         <a href="/stat" class="sidebar-link">
-                            <i class="fa-solid fa-list pe-2"></i>
-                            Statistique
+                            <i class="bi bi-speedometer2 pe-2"></i>
+                            Dashboard
                         </a>
                     </li>
                     <li class="sidebar-item {% if active_page == 'admin_accueil' or active_page == 'dashboard' %}active{% endif %}">
                         <a href="/dashboard" class="sidebar-link">
                             <i class="fa-solid fa-list pe-2"></i>
-                            Dashboard
+                            Liste des contenus
                         </a>
                     </li>
                 {% if perms.vitrine.add_service %}
@@ -84,11 +86,11 @@
                         </a>
                     </li>
                 {% endif %}
-                {% if perms.vitrine.add_prix %}
-                    <li class="sidebar-item {% if active_page == 'ajout_prix' %}active{% endif %}">
-                        <a href="/ajout_prix" class="sidebar-link">
-                            <i class="fas fa-tags pe-2"></i>
-                            Ajout prix
+                {% if perms.vitrine.add_agence %}
+                    <li class="sidebar-item {% if active_page == 'ajout_agence' %}active{% endif %}">
+                        <a href="/ajout_agence" class="sidebar-link">
+                            <i class="fas fa-house pe-2"></i>
+                            Ajout agence
                         </a>
                     </li>
                 {% endif %}
@@ -118,7 +120,7 @@
                         </a>
                     </li>
                 {% endif %}
-                {% if perms.auth.change_group %}
+                {% if perms.auth.change_group or perms.auth.change_permission %}
                  <li class="sidebar-item">
                         <a href="/groupe" class="sidebar-link {% if active_page == 'groupes' %}active {% endif %} ">
                             <i class="bi bi-people pe-2"></i>
@@ -229,7 +231,6 @@ $(document).ready(function(){
     <script src="{% static 'assets/vendor/js/menu.js' %}"></script>
      <script type="module" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.js"></script>
 
-</script>
     <!-- endbuild -->
     <!-- Vendors JS -->
     <!-- Main JS -->
@@ -287,27 +288,28 @@ $('.btnModifierActualite').click(function() {
         }
     });
 });
-$('.btnModifierPrix').click(function() {
+$('.btnModifierAgence').click(function() {
     // Récupérer l'identifiant de la donnée à modifier depuis l'attribut de données personnalisé
     var id = $(this).data('id');
 
     // Envoyer une requête AJAX pour récupérer les détails de la donnée à modifier
     $.ajax({
-        url: "get_prix",
+        url: "get_agence",
         type: "GET",
         data: {'id': id},
         success: function(response) {
             // Mettre à jour les champs du formulaire avec les détails récupérés
-            $('#nomPrix').val(response.nom);
-            $('#prix').val(response.prix);
-            $('#idDonneePrix').val(id);
-            $('#iconePrix').val(response.icone);
+            $('#nomAgence').val(response.nom);
+            $('#rue').val(response.rue);
+            $('#telephone').val(response.telephone)
+            $('#idDonneeAgence').val(id);
+
             
           
             // etc.
 
             // Afficher la modal de modification
-            $('#modalModifierPrix').modal('show');
+            $('#modalModifierAgence').modal('show');
         }
     });
 });
@@ -340,19 +342,23 @@ $('.btnModifierDepartement').click(function(){
      
 
 
-$('#formAuthenticationPrix').submit(function(event) {
+$('#formAuthenticationAgence').submit(function(event) {
     event.preventDefault(); // Empêcher le comportement par défaut du formulaire
     
     // Récupérer l'identifiant de la donnée à partir du champ caché
-    var id = $('#idDonneePrix').val();
-
+   var id = $('#idDonneeAgence').val();
+    var formData = new FormData(this);
+    formData.append('idDonneeAgence', id); 
     $.ajax({
-        url: "edit_prix",
+        url: "edit_agence",
         type: "POST",
-        data: $(this).serialize() + "&idDonneePrix=" + id,
+        data:formData,
+         processData: false, // Ne pas traiter les données
+        contentType: false,// Ajouter l'identifiant de la donnée à la requête
         success: function(response) {
             alert('modification réussi')
-            $('#modalModifierPrix').modal('hide');
+            $('#modalModifier').modal('hide');
+            location.reload()
         }
     });
 });
@@ -372,6 +378,7 @@ $('#formAuthentication').submit(function(event) {
         success: function(response) {
             alert('modification réussi')
             $('#modalModifier').modal('hide');
+            location.reload()
         }
     });
 });
@@ -395,6 +402,8 @@ $('#formAuthenticationActualite').submit(function(event) {
         success: function(response) {
             alert('modification d\'actualité réussi')
             $('#modalModifierActualite').modal('hide');
+            location.reload()
+            
         }
     });
 });
@@ -419,6 +428,8 @@ $('#formAuthenticationDepartement').submit(function(event) {
         success: function(response) {
             alert("Modification du département réussi")
             $('#modalModifierDepartement').modal('hide');
+            location.reload()
+            
         }
     });
 });
@@ -436,6 +447,8 @@ $('#formAuthenticationGroupe').submit(function(event) {
         success: function(response) {
             alert("Modification du groupe réussi")
             $('#modalModifierGroupe').modal('hide');
+            location.reload()
+            
         }
     });
 });
@@ -529,6 +542,9 @@ $("#btnConfirmerSupprimerPrix").submit(function(event){
         success: function(response) {
             alert('Supression réussi')
             $('#modalSupprimerPrix').modal('hide');
+            location.reload()
+            
+            
         }
     });
 })
@@ -547,6 +563,8 @@ $("#btnConfirmerSupprimerPrix").submit(function(event){
         success: function(response) {
             alert('Supression réussi')
             $('#modalSupprimer').modal('hide');
+            location.reload()
+            
         }
     });
 })
@@ -565,6 +583,8 @@ $("#btnConfirmerSupprimerPrix").submit(function(event){
         success: function(response) {
             alert('Supression réussi')
             $('#modalSupprimerDepartement').modal('hide');
+            location.reload()
+            
         }
     });
 })
@@ -582,6 +602,8 @@ $("#btnConfirmerSupprimerPrix").submit(function(event){
         success: function(response) {
             alert('Supression réussi')
             $('#modalSupprimerActualite').modal('hide');
+            location.reload()
+            
         }
     });
 })

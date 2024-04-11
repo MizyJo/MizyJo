@@ -1,5 +1,5 @@
 {% load static %}
-<div class="modal fade" id="modalModifierPrix">
+<div class="modal fade" id="modalModifierAgence">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -20,18 +20,18 @@
                 </a>
               </div>
               <!-- /Logo -->
-              <h5 class="mb-2 text-center">Prix</h5>
-              <form id="formAuthenticationPrix" class="mb-3" >
+              <h5 class="mb-2 text-center">Agence</h5>
+              <form id="formAuthenticationAgence" class="mb-3">
                   {% csrf_token %}
                 <div class="mb-3">
-                  <label for="email" class="form-label">Nom du sèrvices </label>
+                  <label for="email" class="form-label">Nom de l'agence</label>
                   <input
                     type="text"
                     class="form-control"
-                    id="nomPrix"
+                    id="nomAgence"
                     name="nom"
                     value = ""
-                    placeholder="Nom du service"
+                    placeholder="Nom de l'agence"
                     autofocus
                   />
                 </div>
@@ -39,7 +39,7 @@
                   <input
                     type="hidden"
                     class="form-control"
-                    id="idDonneePrix"
+                    id="idDonneeAgence"
                     name="idDonnee"
                     placeholder="id"
                     autofocus
@@ -47,25 +47,29 @@
                 </div>
                 <div class="mb-3 form-password-toggle">
                   <div class="d-flex justify-content-between">
-                    <label class="form-label" for="prix">Prix</label>
+                    <label class="form-label" for="prix">Rue</label>
                    
                   </div>
                   <div class="input-group input-group-merge">
                     <input
-                      type="number"
-                      id="prix"
+                      type="text"
+                      id="rue"
                       class="form-control"
-                      name="prix"
-                      placeholder="Entrer le prix par ans"
+                      name="rue"
+                      placeholder="Entrer la rue"
                       aria-describedby="password"
                     >
                       
                   </div>
                 </div>
                   <div class="mb-3">
-                          <label for="icone" class="form-label">Icone</label>
-                          <input type="text" id="iconePrix" placeholder="icone" class="form-control" name="icone">
+                          <label for="icone" class="form-label">Téléphone</label>
+                          <input type="text" id="telephone" placeholder="Numero téléphone" class="form-control" name="telephone">
                       </div>
+                  <div class="mb-3">
+                      <label for="" class="form-label">Photo de l'agence</label>
+                      <input type="file" name="photo" class="form-control" accept="image/*">
+                  </div>
                   <br>
                 <div class="mb-3">
                   <center><button class="btn btn-primary btn-outline-success d-grid w-50" type="submit">Modifier</button></center>
@@ -121,18 +125,18 @@
             
 
 
- <div class="modal fade" id="modalSupprimerPrix">
+ <div class="modal fade" id="modalSupprimerAgence">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Supprimer les données</h5>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <button type="button" class=btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
-        <form id="btnConfirmerSupprimerPrix">
+        <form id="btnConfirmerSupprimerAgence">
             {% csrf_token %}
-              <input type="hidden" id="id_prix" name="id">
-              <p>Êtes-vous sûr de vouloir supprimer ce prix ?</p>
+              <input type="hidden" id="id_agence" name="id">
+              <p>Êtes-vous sûr de vouloir supprimer cette agence ?</p>
         <button type="submit" class="btn btn-danger btn-sm" >Confirmer</button>
           </form>
       </div>

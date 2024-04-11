@@ -29,10 +29,11 @@
                             <td>{% if donne.is_active == True %}<p class="text-success"><i class="fas fa-check-circle pe-2"></i>Activé</p>{% else  %}<p class="text-danger"><i class="fas fa-times-circle pe-2"></i>Désactivé</p>{% endif %}</td>
                             <td>
                                 {% if donne.is_active == False %}
-                                <a class="btn btn-outline-success btn-sm" href="/statut/{{ donne.id }}"><i class="fas fa-toggle-on pe-2"></i>Activé</a>
+                                <a class="btn btn-outline-success btn-sm {% if donne.is_superuser == True %}disabled{% endif %}" href="/statut/{{ donne.id }}"><i class="fas fa-toggle-on pe-2"></i>Activé</a>
+                                    <button type="button" data-id="{{ donne.id }}"  class="btn btn-danger btn-sm delete_user {% if donne.is_superuser == True %}disabled{% endif %}" ><i class="bi bi-trash"></i></button>
                                 {% else %}
-                                    <a class="btn btn-outline-danger btn-sm" href="/statut/{{ donne.id }}"><i class="fas fa-toggle-off pe-2"></i>Désactivé</a>
-                                    <button type="button" data-id="{{ donne.id }}"  class="btn btn-danger btn-sm delete_user" ><i class="bi bi-trash"></i></button>
+                                    <a class="btn btn-outline-danger btn-sm {% if donne.is_superuser == True %}disabled{% endif %}" href="/statut/{{ donne.id }}"><i class="fas fa-toggle-off pe-2"></i>Désactivé</a>
+                                    <button type="button" data-id="{{ donne.id }}"  class="btn btn-danger btn-sm delete_user {% if donne.is_superuser == True %}disabled{% endif %}" ><i class="bi bi-trash"></i></button>
                                 {% endif %}
                             </td>
                         </tr>

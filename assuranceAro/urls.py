@@ -18,20 +18,20 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
-from vitrine.views import index, service, departement, tarifs, about, contact, accueil, dashboard_admin, \
+from vitrine.views import index, service, tarifs, about, contact, accueil, dashboard_admin, \
     auth_admin, admin_login, page2, page1, ajout_departement, ajout_prix, admin_accueil, logout_views, add_service, \
-    add_actualite, add_departement, add_prix, get_service, edit_service, get_departement, get_actualite, get_prix, \
-    edit_prix, edit_departement, edit_actualite, supprimer_donnee_prix, supprimer_donnee_service, \
+    add_actualite, add_departement, add_prix, get_service, edit_service, get_departement, get_actualite, \
+    edit_departement, edit_actualite, supprimer_donnee_prix, supprimer_donnee_service, \
     supprimer_donnee_departement, supprimer_donnee_actualite, new_users, register_user, historique, ajout_apropos, \
     add_apropos, autre, users, groupes, attribute_groupe, affiche_groupe, delete_groupe_users, statut, delete_users, \
     create_groupe, add_group, ens_group, get_groupe, edit_group, delete_groupe, dash_view, graphe, permission, \
-    attribuer_permission, view_permissions, delete_permission
+    attribuer_permission, view_permissions, delete_permission, ajout_agence, add_agence, get_agence, edit_agence, agence
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',index),
     path('service',service,name="service"),
-    path('departement',departement, name="departement"),
+    path('agence', agence, name="agence"),
     path('tarif',tarifs,name="tarif"),
     path('about',about,name="about"),
     path('contact',contact,name="contact"),
@@ -57,8 +57,8 @@ urlpatterns = [
     path('edit_departement', edit_departement, name="edit_departement"),
     path('get_actualite',get_actualite,name="get_actualite"),
     path('edit_actualite', edit_actualite, name="edit_actualite"),
-    path('get_prix',get_prix,name="get_prix"),
-    path('edit_prix',edit_prix,name="edit_prix"),
+    path('get_agence',get_agence,name="get_agence"),
+    path('edit_agence',edit_agence,name="edit_agence"),
     path('delete_prix',supprimer_donnee_prix,name="delete_prix"),
     path('delete_service', supprimer_donnee_service, name="delete_service"),
     path('delete_departement', supprimer_donnee_departement, name="delete_deparrtement"),
@@ -85,7 +85,10 @@ urlpatterns = [
     path('permission', permission, name="permission"),
     path('attribuer_permission', attribuer_permission, name="atttribuer_permission"),
     path('view_permissions', view_permissions, name="view_permissions"),
-    path('delete_permission/<int:id_permission>/<int:id_user>', delete_permission, name="delete_permission")
+    path('delete_permission/<int:id_permission>/<int:id_user>', delete_permission, name="delete_permission"),
+    path('ajout_agence', ajout_agence, name="ajout_agence"),
+    path('add_agence', add_agence, name="add_agence"),
+
 ]
 
 

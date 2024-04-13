@@ -11,7 +11,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.decorators import login_required, permission_required
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
+
 from assuranceAro import settings
+from assuranceAro.settings import BASE_DIR
 from vitrine.models import Service, Article, Prix, Departement, Apropos, Agence
 
 
@@ -1064,3 +1068,32 @@ def add_agence(request):
             return redirect('/ajout_agence')
     else:
         return redirect('/administrateur')
+
+
+def afficher_google_analytics(request):
+    # Chemin vers le fichier de clé JSON de votre compte de service Google Cloud
+    CLE_JSON = BASE_DIR+"/vitrine/static/cle.json"
+    VUE_ID = 'ga:VOTRE_VUE_ID'
+
+    # Authentification avec le compte de service
+    credentials = service_account.Credentials.from_service_account_file(CLE_JSON)
+    analytics = build('analyticsreporting', 'v4', credentials=credentials)
+
+    # Demande à l'API Google Analytics les données
+    data = analytics.reports().batchGet(
+        body={
+            'reportRequests': [
+                {
+                    'viewId': VUE_ID,
+                    'dateRanges': [{'startDate': '7daysAgo', 'endDate': 'today'}],
+                    'metrics': [{'expression': 'ga:users'}]
+                }
+            ]
+        }
+    ).execute()
+
+    # Extraire le nombre de visiteurs
+    visiteurs = data['reports'][0]['data']['totals'][0]['values'][0]
+
+    # Passer les données au template
+    return render(request, 'afficher_google_analytics.html', {'visiteurs': visiteurs})

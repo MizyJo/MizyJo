@@ -64,7 +64,7 @@ class Autre(models.Model):
 
 class Agence(models.Model):
     nom = models.CharField(max_length=100)
-    rue = models.CharField()
+    rue = models.CharField(max_length=300)
     telephone = models.CharField(max_length=20)
     date = models.DateTimeField(default=timezone.now)
     update_at = models.DateTimeField(default=timezone.now)

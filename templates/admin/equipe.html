@@ -1,0 +1,13 @@
+{% extends 'admin/dashboard.html' %}
+{% block content %}
+    <div class="container">
+     <h4 class="text-center text-secondary p-5 m-5">Ajouter des images pour la séction équipe de la page d'accueil du site web</h4>
+    <form action="add_equipe" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+        <label for="" class="form-label">Photo d'équipe : </label>
+        <input type="file" accept="image/*" name="photo" class="form-control form-control-lg p-2" required>
+        <button type="submit" class="btn btn-success mt-2">Ajouter</button>
+    </form>
+    </div>
+   {% include 'admin/message.html' %}
+{% endblock %}

@@ -100,6 +100,14 @@
                         </a>
                     </li>
                 {% endif %}
+                {% if perms.vitrine.add_equipe %}
+                <li class="sidebar-item {% if active_page == 'equipe' %}active{% endif %}">
+                        <a href="/equipe" class="sidebar-link">
+                            <i class="fas fa-image pe-2"></i>
+                            Photo d'équipe
+                        </a>
+                    </li>
+                {% endif %}
                     <li class="sidebar-header">
                         Autre options
                     </li>

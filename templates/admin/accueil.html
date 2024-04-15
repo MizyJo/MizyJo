@@ -201,17 +201,94 @@
                         </div>
                     </div>
                         {% endif %}
+                        {% if perms.vitrine.view_apropos %}
+                            <div class="card border-0">
+                        <div class="card-header">
+                            <h5 class="card-title">
+                               Listes des a-propos
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Titre</th>
+                                        <th scope="col">Déscription</th>
+                                        <th scope="col">Icone</th>
+                                        <th scope="col">Action</th>
+
+                                    </tr>
+                                </thead>
+                                {% if apropos %}
+                                <tbody>
+                                    {% for donne in apropos %}
+                                    <tr>
+                                        <td>{{ donne.titre }}</td>
+                                        <td>{{ donne.description }}</td>
+                                        <td>{{ donne.icone }}</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                {% if perms.vitrine.change_apropos %}
+                                                <button data-id="{{ donne.id }}" class="btn btn-outline-primary btn-sm btnModifierApropos"><i class="bi bi-pencil"></i></button>
+                                                {% endif %}
+                                                {% if perms.vitrine.delete_apropos %}
+                                                <button data-id="{{ donne.id }}" class="btn btn-outline-danger btn-sm btnSuprimerApropos"><i class="bi bi-trash"></i></button>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                   {% endfor %}
+                                </tbody>
+                                {% endif %}
+                            </table>
+                            </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-12 col-md-6 col-lg-6">
-              
-                           
+                        {% endif %}
+                        {% if perms.vitrine.view_equipe %}
+                            <div class="card border-0">
+                        <div class="card-header">
+                            <h5 class="card-title">
+                               Photo des équipes
+                            </h5>
                         </div>
-                        <div class="col-12 col-md-6 col-lg-6">
-            
+                        <div class="card-body">
+                            <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                       
+                                        <th scope="col">Photo</th>
+                                        <th scope="col">Action</th>
+
+                                    </tr>
+                                </thead>
+                                {% if equipe %}
+                                <tbody>
+                                    {% for donne in equipe %}
+                                    <tr>
+                                       
+                                        <td><img src="{{ donne.photo.url }}" alt="" height="100px" width="120px"></td>
+                                        <td>
+                                            <div class="btn-group">
+                                                {% if perms.vitrine.delete_apropos %}
+                                                <button data-id="{{ donne.id }}" class="btn btn-outline-danger btn-sm btnSuprimerEquipe"><i class="bi bi-trash"></i></button>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                   {% endfor %}
+                                </tbody>
+                                {% endif %}
+                            </table>
+                            </div>
                         </div>
                     </div>
+                        {% endif %}
+                        </div>
+                    </div>
+
                     <!-- Table Element -->
 
                 </div>

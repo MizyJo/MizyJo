@@ -9,7 +9,7 @@
         </div>
 
         <div class="row">
-
+            
           <div class="col-xl-5 col-lg-6 video-box d-flex justify-content-center align-items-stretch position-relative">
               <img src="{% static 'assets/img/photo.jpg' %}" alt="" class="img-fluid" style="background-size: cover;background-repeat: no-repeat">
           </div>
@@ -17,25 +17,16 @@
           <div class="col-xl-7 col-lg-6 icon-boxes d-flex flex-column align-items-stretch justify-content-center py-5 px-lg-5">
             <h3> Le partenaire de confiance pour votre protection</h3>
             <p>Assurance Aro est une compagnie d'assurance à Madagascar, qui se consacre à la protection de ses clients.</p>
-
+              {% if apropos %}
+                  {% for donne in apropos %}
             <div class="icon-box">
-              <div class="icon"><i class="bx bx-bulb"></i></div>
-              <h4 class="title"><a href="">Le début de ARO</a></h4>
-              <p class="description">Le début d'Assurance Aro est marqué par la création de la première agence générale de La Préservatrice à Madagascar en 1935. Cette agence est créée pour répondre à la demande croissante de produits d'assurance sur l'île.</p>
+              <div class="icon"><i class="{{ donne.icone }}"></i></div>
+              <h4 class="title"><a href="">{{ donne.titre }}</a></h4>
+              <p class="description">{{ donne.description }}</p>
             </div>
-
-            <div class="icon-box">
-              <div class="icon"><i class="bx bx-line-chart"></i></div>
-              <h4 class="title"><a href="">La croissance de l'entreprise</a></h4>
-              <p class="description">La croissance d'Assurance Aro a été rapide et constante. L'entreprise a bénéficié de la demande croissante de produits d'assurance à Madagascar, de l'appui de l'État malgache, de la diversification de ses activités et de son engagement dans le développement du pays.</p>
-            </div>
-
-            <div class="icon-box">
-              <div class="icon"><i class="bx bx-bullseye"></i></div>
-              <h4 class="title"><a href="">Objéctifs</a></h4>
-              <p class="description">L'objectif d'Assurance Aro est de protéger les personnes et les biens des risques auxquels elles sont exposées. Pour ce faire, l'entreprise s'engage à offrir à ses clients une protection optimale, avec un service de qualité et une expertise reconnue.</p>
-            </div>
-
+                  {% endfor %}
+              {% endif %}
+              
           </div>
         </div>
 

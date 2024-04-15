@@ -1873,3 +1873,14 @@ body {
   }
 }
 
+.img-equipe{
+  object-fit: cover; /* Ajuster l'image à la hauteur sans déformation */
+  overflow: hidden; /* Masquer toute partie de l'image qui dépasse */
+  border-radius : 20px;
+   transition: transform 0.3s, box-shadow 0.3s;;
+}
+
+.img-equipe:hover{
+   transform: scale(1.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}

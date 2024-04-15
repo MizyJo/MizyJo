@@ -1,13 +1,36 @@
+
 {% extends 'admin/dashboard.html' %}
+{% load static %}
 {% block content %}
     <div class="container">
     <div class="row">
-        <div class="col-8">
-            a
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <img src="{% static 'img_autre/grand_titre.png' %}" alt="" class="img-fluid m-2">
         </div>
-        <div class="col-4">
-            b
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <form action="/titre" method="post">
+                {% csrf_token %}
+                <div class="m-2 p-2">
+                    <label for="" class="form-label">Grand titre : </label>
+                    <input type="text" name="grand_titre" class="form-control form-control-md" required id="grand_titre" value="{{ autre.grand_titre }}">
+                    <button type="submit" class="m-2 btn btn-outline-primary btn-sm">Modifier</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <img src="{% static 'img_autre/petit_titre.png' %}"  alt="" class="img-fluid m-2">
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <form action="/titre" method="post">
+                {% csrf_token %}
+                <div class="p-2 m-2">
+                    <label for="" class="form-label">Petite titre :</label>
+                    <input type="text" class="form-control form-control-md" name="petit_titre" id="petit_titre"  required value="{{ autre.petit_titre }}">
+                    <button type="submit" class=" m-2 btn btn-outline-primary btn-sm">Modifier</button>
+                </div>
+            </form>
         </div>
     </div>
     </div>
+    {% include 'admin/message.html' %}
 {% endblock %}

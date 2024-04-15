@@ -11,19 +11,18 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.decorators import login_required, permission_required
-from google.oauth2 import service_account
-from googleapiclient.discovery import build
-
 from assuranceAro import settings
-from assuranceAro.settings import BASE_DIR
-from vitrine.models import Service, Article, Prix, Departement, Apropos, Agence
+from vitrine.models import Service, Article, Prix, Departement, Apropos, Agence, Autre, Equipe
 
 
 # Create your views here.
 def index(request):
     active_page = 'accueil'
     article = Article.objects.all()
-    return render(request, 'index.html', {'active_page': active_page, 'article': article})
+    autre = Autre.objects.get(pk=1)
+    equipe = Equipe.objects.all()
+    print(autre)
+    return render(request, 'index.html', {'active_page': active_page, 'article': article, 'autre': autre, 'equipe': equipe})
 
 
 def service(request):
@@ -46,7 +45,8 @@ def tarifs(request):
 
 def about(request):
     active_page = 'about'
-    return render(request, 'about.html', {'active_page': active_page})
+    apropos = Apropos.objects.all()
+    return render(request, 'about.html', {'active_page': active_page, 'apropos':  apropos})
 
 
 def contact(request):
@@ -57,7 +57,10 @@ def contact(request):
 def accueil(request):
     active_page = 'accueil'
     article = Article.objects.all()
-    return render(request, 'index.html', {'active_page': active_page, 'article': article})
+    autre = Autre.objects.get(pk=1)
+    equipe = Equipe.objects.all()
+    print(autre)
+    return render(request, 'index.html', {'active_page': active_page, 'article': article, 'autre': autre, 'equipe': equipe})
 
 
 def administrateur(request):
@@ -77,10 +80,14 @@ def dashboard_admin(request):
         departement = Departement.objects.filter(is_active=True)
         agence = Agence.objects.all()
         actualite = Article.objects.filter(is_active=True)
+        apropos = Apropos.objects.all()
+        equipe = Equipe.objects.all()
         active_page = "dashboard"
         return render(request, 'admin/dashboard.html',
                       {'active_page': active_page, 'service': service, 'departement': departement, 'agence': agence,
-                       'article': actualite})
+                       'article': actualite,
+                       'apropos': apropos,
+                       'equipe': equipe})
     else:
         # L'utilisateur n'est pas connecté, redirigez-le vers la page de connexion
         return redirect(reverse('admin_login'))
@@ -664,8 +671,10 @@ def historique(request):
 @permission_required('vitrine.add_autre')
 def autre(request):
     if request.user.is_authenticated:
+        autre = Autre.objects.get(pk=1)
         active_page = "ajout_autre"
-        return render(request, 'admin/autre.html', {'active_page': active_page})
+        print(autre)
+        return render(request, 'admin/autre.html', {'active_page': active_page, 'autre': autre})
     else:
         redirect(reverse('administrateur'))
 
@@ -1070,30 +1079,60 @@ def add_agence(request):
         return redirect('/administrateur')
 
 
-def afficher_google_analytics(request):
-    # Chemin vers le fichier de clé JSON de votre compte de service Google Cloud
-    CLE_JSON = BASE_DIR+"/vitrine/static/cle.json"
-    VUE_ID = 'ga:VOTRE_VUE_ID'
+@permission_required('vitrine.edit_autre')
+def titre(request):
+    if request.user.is_authenticated and request.method == "POST":
+        grand_titre = request.POST.get('grand_titre')
+        petit_titre = request.POST.get('petit_titre')
 
-    # Authentification avec le compte de service
-    credentials = service_account.Credentials.from_service_account_file(CLE_JSON)
-    analytics = build('analyticsreporting', 'v4', credentials=credentials)
+        if grand_titre:
+            instance = Autre.objects.get(pk=1)
+            instance.grand_titre = grand_titre
+            instance.save()
+            autre = Autre.objects.get(pk=1)
+            attribute_message = "Modification éfféctué avec succès"
+            return render(request, 'admin/autre.html', {'active_page': 'ajout_autre', 'autre': autre, 'attribute_message': attribute_message})
 
-    # Demande à l'API Google Analytics les données
-    data = analytics.reports().batchGet(
-        body={
-            'reportRequests': [
-                {
-                    'viewId': VUE_ID,
-                    'dateRanges': [{'startDate': '7daysAgo', 'endDate': 'today'}],
-                    'metrics': [{'expression': 'ga:users'}]
-                }
-            ]
-        }
-    ).execute()
+        if petit_titre:
+            instance = Autre.objects.get(pk=1)
+            instance.petit_titre = petit_titre
+            instance.save()
+            autre = Autre.objects.get(pk=1)
+            attribute_message = "Modification éfféctué avec succès"
+            return render(request, 'admin/autre.html', {'active_page': 'ajout_autre', 'autre': autre, 'attribute_message': attribute_message})
 
-    # Extraire le nombre de visiteurs
-    visiteurs = data['reports'][0]['data']['totals'][0]['values'][0]
 
-    # Passer les données au template
-    return render(request, 'afficher_google_analytics.html', {'visiteurs': visiteurs})
+@permission_required('vitrine.view_equipe')
+def equipe(request):
+    if request.user.is_authenticated:
+        return render(request, 'admin/equipe.html', {'active_page': 'equipe'})
+    else:
+        return redirect('/administrateur')
+
+
+@permission_required('vitrine.add_equipe')
+def add_equipe(request):
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            photo = request.FILES.get('photo')
+            if photo:
+                equipe = Equipe.objects.create(photo=photo)
+                equipe.save()
+                success_message = "Photo de l'équipe ajouté avec succès"
+                return render(request, 'admin/equipe.html', {'active_page': 'equipe', 'success_message': success_message})
+            else:
+                error_message = "L'image est obligaoire"
+                return render(request, 'admin/equipe.html', {'error_message': error_message, 'active_page': 'equipe'})
+
+        else:
+            return redirect('equipe')
+    return redirect('/administrateur')
+
+
+
+
+
+
+
+
+

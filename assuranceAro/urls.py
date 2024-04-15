@@ -25,7 +25,8 @@ from vitrine.views import index, service, tarifs, about, contact, accueil, dashb
     supprimer_donnee_departement, supprimer_donnee_actualite, new_users, register_user, historique, ajout_apropos, \
     add_apropos, autre, users, groupes, attribute_groupe, affiche_groupe, delete_groupe_users, statut, delete_users, \
     create_groupe, add_group, ens_group, get_groupe, edit_group, delete_groupe, dash_view, graphe, permission, \
-    attribuer_permission, view_permissions, delete_permission, ajout_agence, add_agence, get_agence, edit_agence, agence
+    attribuer_permission, view_permissions, delete_permission, ajout_agence, add_agence, get_agence, edit_agence, \
+    agence, titre, equipe, add_equipe
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -88,6 +89,9 @@ urlpatterns = [
     path('delete_permission/<int:id_permission>/<int:id_user>', delete_permission, name="delete_permission"),
     path('ajout_agence', ajout_agence, name="ajout_agence"),
     path('add_agence', add_agence, name="add_agence"),
+    path('titre', titre, name="titre"),
+    path('equipe', equipe, name="equipe"),
+    path('add_equipe', add_equipe, name="add_equipe"),
 
 ]
 

@@ -15,12 +15,13 @@
               <form action="\add_agence" class=" p-2 m-3" method="post" enctype="multipart/form-data">
                   {% csrf_token %}
               <div class="form-group mb-3">
+                  <label for="" class="form-label">Nom de l'agence :</label>
                   <input type="text" name="nom" placeholder="Nom de l'agence" class="form-control form-control-md">
               </div>
-               <div class="form-group mb-3">
-                   <label for="description" class="form-label">Rue :</label>
-                   <input type="text"  name="rue" placeholder="Rue" id="rue" class="form-control form-control-md p-3">
-              </div>
+                  <div class="mb-3">
+                      <label for="" class="form-label">Adresse de l'agence :</label>
+                      <input type="text" name="adresse" class="form-control" placeholder="Adresse" required>
+                  </div>
               <div class="form-group mb-3">
                   <label for="icone" class="form-label">Numero téléphone :</label>
                   <input type="text" name="telephone" placeholder="Numero téléphone : veillez mettre une espace pour mieux lire le numero telephone. ex : +261 20 22 366 23" id="telephone" class="form-control form-control-md p-4">

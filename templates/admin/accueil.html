@@ -112,7 +112,6 @@
                             <h5 class="card-title">
                                 Listes des départements
                             </h5>
-
                         </div>
                         <div class="card-body">
                          <div class="table-responsive">
@@ -168,7 +167,7 @@
                                     <tr>
                                         <th scope="col">Nom du agence</th>
                                         <th scope="col">Telephone</th>
-                                        <th scope="col">Rue</th>
+                                        <th scope="col">Adresse</th>
                                         <th scope="col">Photo</th>
                                         <th scope="col">Action</th>
                                     </tr>
@@ -179,15 +178,15 @@
                                     <tr>
                                         <td>{{ donne.nom }}</td>
                                         <td>{{ donne.telephone }}</td>
-                                        <td>{{ donne.rue }}</td>
+                                        <td>{{ donne.adresse }}</td>
                                         <td><img src="{{ donne.photo.url }}" alt="" width="100" height="100"></td>
                                         
                                         <td>
                                             <div class="btn-group">
-                                                {% if perms.vitrine.change_prix %}
+                                                {% if perms.vitrine.change_agence %}
                                                 <button data-id="{{ donne.id }}" class="btn btn-outline-primary btn-sm btnModifierAgence"><i class="bi bi-pencil"></i></button>
                                                 {% endif %}
-                                                {% if perms.vitrine.delete_prix %}
+                                                {% if perms.vitrine.delete_agence %}
                                                 <button data-id="{{ donne.id }}" class="btn btn-outline-danger btn-sm btnSuprimerAgence"><i class="bi bi-trash"></i></button>
                                                 {% endif %}
                                             </div>

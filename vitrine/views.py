@@ -373,6 +373,25 @@ def get_departement(request):
         return JsonResponse({'error': 'Méthode non autorisée'}, status=405)
 
 
+def get_apropos(request):
+    if request.method == 'GET':
+        # Récupérer l'identifiant de la donnée à partir des paramètres de la requête
+        donnee_id = request.GET.get('id')
+        # Récupérer l'instance de l'objet à partir de l'identifiant
+        instance = get_object_or_404(Apropos, id=donnee_id)
+        # Préparer les données à renvoyer sous forme de JSON
+        print(instance)
+        data = {
+            'titre': instance.titre,
+            'description': instance.description,
+            'id': instance.id,
+            'icone': instance.icone,
+        }
+        return JsonResponse(data)
+    else:
+        return JsonResponse({'error': 'Méthode non autorisée'}, status=405)
+    
+    
 def get_actualite(request):
     if request.method == 'GET':
         # Récupérer l'identifiant de la donnée à partir des paramètres de la requête
@@ -403,7 +422,7 @@ def get_agence(request):
         data = {
             'id': instance.id,
             'nom': instance.nom,
-            'rue': instance.rue,
+            'adresse': instance.adresse,
             'telephone': instance.telephone,
 
         }
@@ -466,11 +485,28 @@ def edit_agence(request):
         id_donnee = request.POST.get('idDonneeAgence')
         instance = get_object_or_404(Agence, id=id_donnee)
         instance.nom = request.POST.get('nom')
-        instance.rue = request.POST.get('rue')
+        instance.adresse = request.POST.get('adresse')
         instance.telephone = request.POST.get('telephone')
         instance.update_at = datetime.now()
         if request.FILES.get("photo"):
             instance.photo = request.FILES.get("photo")
+        instance.save()
+        # Répondre avec un JSON pour indiquer que la modification a réussi
+        return JsonResponse({'success': True})
+    else:
+        # Si la méthode de la requête n'est pas POST, renvoyer une erreur
+        return JsonResponse({'error': 'Méthode non autorisée'}, status=405)
+
+
+@permission_required('vitrine.edit_apropos')
+def edit_apropos(request):
+    if request.method == 'POST':
+        id_donnee = request.POST.get('idDonneeApropos')
+        instance = get_object_or_404(Apropos, id=id_donnee)
+        instance.titre = request.POST.get('titre')
+        instance.description = request.POST.get('description')
+        instance.icone = request.POST.get('icone')
+        instance.update_at = datetime.now()
         instance.save()
         # Répondre avec un JSON pour indiquer que la modification a réussi
         return JsonResponse({'success': True})
@@ -1058,11 +1094,11 @@ def add_agence(request):
         success_message = "Agence ajouté avec succès"
         if request.method == "POST":
             nom = request.POST.get('nom')
-            rue = request.POST.get('rue')
             telephone = request.POST.get('telephone')
+            adresse = request.POST.get('adresse')
             photo = request.FILES.get('photo')
-            if photo and nom != "" and rue != "" and telephone != "":
-                Agence.objects.create(nom=nom, rue=rue, telephone=telephone, photo=photo)
+            if photo and nom != "" and telephone != "" and adresse != "":
+                Agence.objects.create(nom=nom, telephone=telephone, photo=photo, adresse=adresse)
                 return render(request, "admin/ajout_agence.html", {
                     'active_page': active_page,
                     'success_message': success_message,
@@ -1127,6 +1163,89 @@ def add_equipe(request):
         else:
             return redirect('equipe')
     return redirect('/administrateur')
+
+
+@permission_required('vitrine.delete_agence')
+def delete_agence(request, id):
+    if request.user.is_authenticated:
+        instance = get_object_or_404(Agence, pk=id)
+        instance.delete()
+        active_page = 'dashboard'
+        service = Service.objects.all()
+        departement = Departement.objects.all()
+        article = Article.objects.all()
+        agence = Agence.objects.all()
+        apropos = Apropos.objects.all()
+        equipe = Equipe.objects.all()
+
+        context = {
+            'active_page': active_page,
+            'success_message': 'Suppression efféctué avec succès',
+            'service': service,
+            'departement': departement,
+            'article': article,
+            'agence': agence,
+            'apropos': apropos,
+            'equipe': equipe,
+        }
+        return render(request, 'admin/dashboard.html', context)
+    else:
+        return redirect('/administrateur')
+
+
+@permission_required('vitrine.delete_apropos')
+def delete_apropos(request, id):
+    if request.user.is_authenticated:
+        instance = get_object_or_404(Apropos, pk=id)
+        instance.delete()
+        active_page = 'dashboard'
+        service = Service.objects.all()
+        departement = Departement.objects.all()
+        article = Article.objects.all()
+        agence = Agence.objects.all()
+        apropos = Apropos.objects.all()
+        equipe = Equipe.objects.all()
+
+        context = {
+            'active_page': active_page,
+            'success_message': 'Suppression efféctué avec succès',
+            'service': service,
+            'departement': departement,
+            'article': article,
+            'agence': agence,
+            'apropos': apropos,
+            'equipe': equipe,
+        }
+        return render(request, 'admin/dashboard.html', context)
+
+
+@permission_required('vitrine.delete_equipe')
+def delete_equipe(request, id):
+    if request.user.is_authenticated:
+        instance = get_object_or_404(Equipe, pk=id)
+        instance.delete()
+        active_page = 'dashboard'
+        service = Service.objects.all()
+        departement = Departement.objects.all()
+        article = Article.objects.all()
+        agence = Agence.objects.all()
+        apropos = Apropos.objects.all()
+        equipe = Equipe.objects.all()
+
+        context = {
+            'active_page': active_page,
+            'success_message': 'Suppression efféctué avec succès',
+            'service': service,
+            'departement': departement,
+            'article': article,
+            'agence': agence,
+            'apropos': apropos,
+            'equipe': equipe,
+        }
+        return render(request, 'admin/dashboard.html', context)
+    else:
+        return redirect('/administrateur')
+
 
 
 

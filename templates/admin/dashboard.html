@@ -177,13 +177,11 @@
                 <div class="navbar-collapse navbar">
                     <ul class="navbar-nav">
                         <li class="nav-item"><button id="aide">bouton d'aide</button></li>
-                        <h4 class="text-white text-center mx-3">{{ request.user.username }}</h4> 
-
+                        <h4 class="text-white text-center mx-3">{{ request.user.username }}</h4>
                         <li class="nav-item dropdown">
                             <a href="#" data-bs-toggle="dropdown" class="nav-icon pe-md-0">
                                 <img src="{% static 'assets/img/logo.png' %}" class="avatar img-fluid w-100 h-150" alt="">
                             </a>
-                          
                         </li>
                     </ul>
                 </div>
@@ -191,8 +189,8 @@
            {% block content %}
                {% include 'admin/accueil.html' %}
            {% endblock %}
-           
-        <!-- Modal pour la modification -->
+        {% include 'admin/message.html' %}
+        <!-- Modal pour la modification et la suppession -->
         {% include 'admin/modal_files/service.html' %}
         {% include 'admin/modal_files/prix.html' %}
         {% include 'admin/modal_files/departement.html' %}
@@ -201,6 +199,8 @@
         {% include 'admin/modal_files/aide.html' %}
         {% include 'admin/modal_files/confirmation.html' %}
         {% include 'admin/modal_files/permission.html' %}
+        {% include 'admin/modal_files/a-propos.html' %}
+
        
         </div>
     </div>
@@ -245,13 +245,18 @@ $(document).ready(function(){
     <script async defer src="https://buttons.github.io/buttons.js"></script>
 
  <script>
+     $('.btnSuprimerEquipe').click(function(){
+         var id = $(this).data('id')
+         $('#btnDeleteEquipe').attr('href', '/delete_equipe/'+id)
+         $('#modalSupprimerEquipe').modal('show')
+     })
      // Lorsque le bouton "Modifier" est cliqué
 $('.btnModifier').click(function() {
     // Récupérer l'identifiant de la donnée à modifier depuis l'attribut de données personnalisé
     var id = $(this).data('id');
     // Envoyer une requête AJAX pour récupérer les détails de la donnée à modifier
     $.ajax({
-        url: "get_service",
+        url: "/get_service",
         type: "GET",
         data: {'id': id},
         success: function(response) {
@@ -266,19 +271,24 @@ $('.btnModifier').click(function() {
         }
     });
 });
+
 $('.delete_permission').click(function(){
     var id = $(this).data('id');
     $('#btnDeletePermission').attr('href', '/delete_permission/'+id)
     $('#modalDeletePermission').modal('show')
 })
-
+     $('.btnSuprimerApropos').click(function(){
+         var id = $(this).data('id')
+         $('#btnDeleteApropos').attr('href', '/delete_apropos/'+id)
+         $('#modalSupprimerApropos').modal('show')
+     })
 $('.btnModifierActualite').click(function() {
     // Récupérer l'identifiant de la donnée à modifier depuis l'attribut de données personnalisé
     var id = $(this).data('id');
 
     // Envoyer une requête AJAX pour récupérer les détails de la donnée à modifier
     $.ajax({
-        url: "get_actualite",
+        url: "/get_actualite",
         type: "GET",
         data: {'id': id},
         success: function(response) {
@@ -294,19 +304,37 @@ $('.btnModifierActualite').click(function() {
         }
     });
 });
+$('.btnModifierApropos').click(function(){
+    var id = $(this).data('id');
+    $.ajax({
+         url: "/get_apropos",
+        type: "GET",
+        data: {'id': id},
+        success: function(response) {
+            // Mettre à jour les champs du formulaire avec les détails récupérés
+            $('#titreApropos').val(response.titre);
+            $('#descriptionApropos').val(response.description);
+            $('#iconeApropos').val(response.icone);
+            $('#idDonneeApropos').val(response.id);
+            // etc.
+            // Afficher la modal de modification
+            $('#modalModifierApropos').modal('show');
+        }
+    })
+})
 $('.btnModifierAgence').click(function() {
     // Récupérer l'identifiant de la donnée à modifier depuis l'attribut de données personnalisé
     var id = $(this).data('id');
 
     // Envoyer une requête AJAX pour récupérer les détails de la donnée à modifier
     $.ajax({
-        url: "get_agence",
+        url: "/get_agence",
         type: "GET",
         data: {'id': id},
         success: function(response) {
             // Mettre à jour les champs du formulaire avec les détails récupérés
             $('#nomAgence').val(response.nom);
-            $('#rue').val(response.rue);
+            $('#adresse').val(response.adresse);
             $('#telephone').val(response.telephone)
             $('#idDonneeAgence').val(id);
 
@@ -327,7 +355,7 @@ $('.btnModifierDepartement').click(function(){
 
     // Envoyer une requête AJAX pour récupérer les détails de la donnée à modifier
     $.ajax({
-        url: "get_departement",
+        url: "/get_departement",
         type: "GET",
         data: {'id': id},
         success: function(response) {
@@ -356,7 +384,27 @@ $('#formAuthenticationAgence').submit(function(event) {
     var formData = new FormData(this);
     formData.append('idDonneeAgence', id); 
     $.ajax({
-        url: "edit_agence",
+        url: "/edit_agence",
+        type: "POST",
+        data:formData,
+         processData: false, // Ne pas traiter les données
+        contentType: false,// Ajouter l'identifiant de la donnée à la requête
+        success: function(response) {
+            alert('modification réussi')
+            $('#modalModifier').modal('hide');
+            location.reload()
+        }
+    });
+});
+$('#formAuthenticationApropos').submit(function(event) {
+    event.preventDefault(); // Empêcher le comportement par défaut du formulaire
+    
+    // Récupérer l'identifiant de la donnée à partir du champ caché
+   var id = $('#idDonneeApropos').val();
+    var formData = new FormData(this);
+    formData.append('idDonneeApropos', id); 
+    $.ajax({
+        url: "/edit_apropos",
         type: "POST",
         data:formData,
          processData: false, // Ne pas traiter les données
@@ -376,7 +424,7 @@ $('#formAuthentication').submit(function(event) {
     var formData = new FormData(this);
     formData.append('idDonnee', id); 
     $.ajax({
-        url: "edit_service",
+        url: "/edit_service",
         type: "POST",
         data:formData,
          processData: false, // Ne pas traiter les données
@@ -400,7 +448,7 @@ $('#formAuthenticationActualite').submit(function(event) {
     formData.append('idDonneeActualite', id); // Ajouter l'ID au formData si nécessaire
 
     $.ajax({
-        url: "edit_actualite",
+        url: "/edit_actualite",
         type: "POST",
         data: formData,
         processData: false, // Ne pas traiter les données
@@ -426,7 +474,7 @@ $('#formAuthenticationDepartement').submit(function(event) {
     formData.append('idDonneeDepartement', id); // Ajouter l'ID au formData
 
     $.ajax({
-        url: "edit_departement",
+        url: "/edit_departement",
         type: "POST",
         data: formData,
         processData: false, // Ne pas traiter les données
@@ -446,7 +494,7 @@ $('#formAuthenticationGroupe').submit(function(event) {
     // Récupérer l'identifiant de la donnée à partir du champ caché
     var id = $('#idDonneeGroupe').val();
     $.ajax({
-        url: "edit_groupe",
+        url: "/edit_groupe",
         type: "POST",
         data: $(this).serialize() + "&idDonneeGroupe=" + id,
         enctype : "multipart/form-data", // Ajouter l'identifiant de la donnée à la requête
@@ -463,7 +511,7 @@ $('#formAuthenticationGroupe').submit(function(event) {
 $('.btnSuprimerService').click(function() {
     var id = $(this).data('id');
    $.ajax({
-        url: "get_service",
+        url: "/get_service",
         type: "GET",
         data: {'id': id},
         success: function(response) {
@@ -481,7 +529,7 @@ $('.btnSuprimerService').click(function() {
 $('.btnSuprimerDepartement').click(function() {
     var id = $(this).data('id');
    $.ajax({
-        url: "get_departement",
+        url: "/get_departement",
         type: "GET",
         data: {'id': id},
         success: function(response) {
@@ -495,7 +543,7 @@ $('.btnSuprimerDepartement').click(function() {
 $('.btnSuprimerActualite').click(function() {
     var id = $(this).data('id');
    $.ajax({
-        url: "get_actualite",
+        url: "/get_actualite",
         type: "GET",
         data: {'id': id},
         success: function(response) {
@@ -506,18 +554,10 @@ $('.btnSuprimerActualite').click(function() {
     });
 });
 
-$('.btnSuprimerPrix').click(function() {
+$('.btnSuprimerAgence').click(function() {
     var id = $(this).data('id');
-   $.ajax({
-        url: "get_prix",
-        type: "GET",
-        data: {'id': id},
-        success: function(response) {
-            // Mettre à jour les champs du formulaire avec les détails récupérés
-            $('#id_prix').val(id);
-             $('#modalSupprimerPrix').modal('show');
-        }
-    });
+    $('#btnDeleteAgence').attr('href', '/delete_agence/'+id);
+    $('#modalSupprimerAgence').modal('show')
 });
 function getCookie(name) {
     var cookieValue = null;

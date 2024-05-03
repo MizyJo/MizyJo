@@ -14,7 +14,7 @@
 }
 
 .arg:hover .icon-box {
-  transform: translateY(-20px);
+  transform:scale(1.1);
 }
 
 
@@ -481,7 +481,6 @@ h6 {
 #hero {
   width: 100%;
   height: 90vh;
-  background: url("../img/back.jpg") top center;
   background-size: cover;
   margin-bottom: -200px;
 }
@@ -1876,11 +1875,89 @@ body {
 .img-equipe{
   object-fit: cover; /* Ajuster l'image à la hauteur sans déformation */
   overflow: hidden; /* Masquer toute partie de l'image qui dépasse */
-  border-radius : 20px;
-   transition: transform 0.3s, box-shadow 0.3s;;
+   transition: transform 0.8s, box-shadow 0.8s;;
 }
 
-.img-equipe:hover{
+.img-equipe:hover {
    transform: scale(1.1);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+   transform-origin: center; /* Utilise le centre de l'image comme point de transformation */
+   transition: transform 0.3s; /* Ajout de transition pour une animation fluide */
 }
+
+ .modal {
+            display: none; /* Par défaut, le modal est caché */
+            position: fixed; /* Positionnement fixe */
+            z-index: 999; /* Une valeur élevée pour être au-dessus de tout le reste */
+            padding-top: 100px; /* Espace au-dessus du modal */
+            padding-bottom:100px;
+            left: 0;
+            top: 0;
+            width: 100%; /* Pleine largeur */
+            height: 100%; /* Pleine hauteur */
+            overflow: auto; /* Ajouter une barre de défilement si nécessaire */
+            background-color: rgb(0,0,0); /* Fond noir */
+            background-color: rgba(0,0,0,0.9); /* Fond noir avec transparence */
+        }
+.modal-content {
+  margin: auto 10px;
+  display: block;
+   /* Largeur du contenu du modal */
+  max-width:70%;
+  height: auto;/* Largeur maximale du contenu du modal */
+}
+.modal img {
+  max-width: 70%; /* Image prend la largeur maximale du modal */
+height: auto; /* Hauteur automatique pour conserver les proportions */
+  display: block;
+  margin: auto; /* Centrer l'image */
+
+}
+.close {
+  position: absolute;
+  top: 15px;
+  right: 35px;
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+.close:hover,
+.close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+}
+.promo-banner {
+    background-color: #e10404; /* couleur de fond jaune */
+    color: #fff; /* texte blanc */
+    padding: 5px 10px; /* espacement intérieur */
+    position: absolute; /* position absolue pour chevaucher la card */
+    top: 10px; /* espacement depuis le haut de la card */
+    right: 10px; /* espacement depuis la droite de la card */
+    border-radius: 5px; /* coins arrondis */
+    font-weight: bold; /* texte en gras */
+}
+ .promotion-toggle {
+        display: inline-block;
+        width: 40px; /* Largeur totale du toggle */
+        height: 20px; /* Hauteur du cercle */
+        background-color: #000000; /* Couleur de fond du toggle */
+        border-radius: 20px; /* Bord arrondi */
+        position: relative;
+        cursor: pointer;
+    }
+
+    .toggle-circle {
+        position: absolute;
+        width: 18px; /* Diamètre du cercle */
+        height: 18px; /* Diamètre du cercle */
+        background-color: #578d5f; /* Couleur du cercle */
+        border-radius: 50%; /* Cercle */
+        top: 1px; /* Ajustement de position verticale */
+        left: 1px; /* Ajustement de position horizontale */
+        transition: all 0.3s ease; /* Animation fluide */
+    }
+
+    .toggle-circle.active {
+        left: 20px; /* Position à droite lorsque le toggle est activé */
+    }

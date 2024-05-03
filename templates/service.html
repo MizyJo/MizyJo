@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %} Assurance ARO - Services {% endblock %}
+{% block title %} Assurances ARO - Services {% endblock %}
 {% block content %}
     <section id="services" class="services">
       <div class="container">
@@ -20,8 +20,11 @@
                         <h1 class="text-center"><i class="{{donne.icone }}"></i></h1>
                       <h4 class="card-title ">{{ donne.nom }}</h4>
                       <p class="card-text">
-                          {{ donne.description }}
+                          {{ donne.description|safe }}
                       </p>
+                         {% if donne.promotion %}
+                <div class="promo-banner">Promotion</div>
+                {% endif %}
                     </div>
                   </div>
             

@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Assurance ARO - A-propos {% endblock %}
+{% block title %}Assurances ARO - A-propos {% endblock %}
 {% block content %}
 <section id="about" class="about">
       <div class="container-fluid">
@@ -20,9 +20,9 @@
               {% if apropos %}
                   {% for donne in apropos %}
             <div class="icon-box">
-              <div class="icon"><i class="{{ donne.icone }}"></i></div>
-              <h4 class="title"><a href="">{{ donne.titre }}</a></h4>
-              <p class="description">{{ donne.description }}</p>
+              <div class="icon"><i class="{{ donne.icone|safe }}"></i></div>
+              <h4 class="title"><a href="">{{ donne.titre|safe }}</a></h4>
+              <p class="description">{{ donne.description|safe }}</p>
             </div>
                   {% endfor %}
               {% endif %}

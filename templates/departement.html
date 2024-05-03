@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}
-Assurance ARO - Départements
+Assurances ARO - Agence
 {% endblock %}
 
 {% block content %}
@@ -32,7 +32,7 @@ Assurance ARO - Départements
                 <div class="row gy-4">
                   <div class="col-lg-8 details order-2 order-lg-1">
                     <h3>{{ donne.nom }}</h3>
-                      <p>{{ donne.rue }}</p>
+                      <p>{{ donne.adresse }}</p>
                       <p>Téléphone : {{ donne.telephone }}</p>
                   </div>
                   <div class="col-lg-4 text-center order-1 order-lg-2">

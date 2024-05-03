@@ -30,6 +30,43 @@
                 </div>
             </form>
         </div>
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <img src="{% static 'img_autre/pourquoi.png' %}" class="img-fluid m-2" alt="">
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <form action="/titre" method="post">
+                {% csrf_token %}
+                <label for="" class="form-label">Argument :</label>
+                <input type="text" class="form-control"  name="pourquoi" required value="{{ autre.pourquoi }}">
+                <button type="submit" class="btn btn-outline-primary btn-sm">Modifier</button>
+            </form>
+        </div>
+        <div class="col-sm-12 col-md-6 col-Lg-6 p-2">
+            <form action="/titre" method="post">
+                {% csrf_token %}
+                <label for="" class="form-label">Numero de téléphone pour appeler Assurances ARO :</label>
+                <input type="text" placeholder="ex : +261 34 00 000 00" name="telephone" class="form-control" value="{{ autre.telephone }}" required>
+                <button type="submit" class="btn btn-outline-primary btn-sm">Modifier</button>
+            </form>
+        </div>
+        <div class="col-sm-12 col-md-6 col-Lg-6 p-2">
+            <form action="/titre" method="post">
+                {% csrf_token %}
+                <label for="" class="form-label">Adresse E-mail pour contacter l'entreprise Assurances ARO :</label>
+                <input type="email" class="form-control" name="email" value="{{ autre.email }}"  required>
+                <button type="submit" class="btn btn-outline-primary btn-sm m-1">Modifier</button>
+            </form>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-12">
+            <h3 class="text-secondary p-4 text-center">Photo de couverture du site web</h3>
+            <form action="/titre" method="post" enctype="multipart/form-data" class="p-3">
+                {% csrf_token %}
+                <label for="" class="form-label">Photo de couverture :</label>
+                <input type="file" name="photo" class="form-control form-control-sm" required>
+                <button type="submit" class="btn btn-primary btn-sm mt-sm-2">Changer</button>
+            </form>
+        </div>
+        
     </div>
     </div>
     {% include 'admin/message.html' %}

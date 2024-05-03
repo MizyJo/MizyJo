@@ -1,0 +1,49 @@
+Notes importantes concernant le site web :
+
+Création de compte superutilisateur:
+Pour créer un compte de superutilisateur permettant de gérer l'ensemble du site web, rendez-vous à l'adresse suivante :
+http://localhost:8000/lsdfkmjdsmkhllmksjdf345jmlkj54MLJLKJhlhjh
+
+Connexion à l'espace administrateur:
+Si vous possédez déjà un compte superutilisateur, connectez-vous à l'espace administrateur via l'URL suivante :
+http://localhost:8000/administrateur
+Utilisation des icônes:
+
+Le design du site web repose sur l'utilisation d'icônes. L'insertion d'icônes est donc obligatoire pour le bon fonctionnement du site.
+Pour intégrer des icônes, vous trouverez un champ de texte nommé "icone" dans les formulaires d'ajout de contenu.
+Dans ce champ, saisissez simplement la classe CSS de l'icône souhaitée.
+
+Ajout de contenu :
+Service:
+Nom du service
+Description du service
+Icône (classe CSS)
+Photo d'illustration
+
+Actualité:
+Titre de l'actualité
+Description de l'actualité
+Photo d'illustration Remarque : La date de publication est générée automatiquement et correspond à la date du jour.
+
+Agence:
+Lieu ou nom de l'agence
+Adresse
+Numéro de téléphone (format : +261 XX XXX XXXX)
+Photo d'illustration
+
+À propos:
+Titre de la section "À propos"
+Description de l'entreprise
+Icône d'illustration
+
+Équipe:
+Photos des membres de l'équipe (événements, réunions, etc.)
+
+Remarques supplémentaires:
+Ces instructions concernent l'ajout de contenu aux différentes sections du site web.
+Assurez-vous de respecter les formats et les exigences spécifiques à chaque type de contenu.
+N'hésitez pas à contacter l'administrateur du site web pour toute question ou assistance supplémentaire.
+
+
+Il y a une base de donnée qui s'appelle assure_aro. il y a des exemples dedans pour vous aidez sur les données
+

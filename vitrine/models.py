@@ -11,6 +11,7 @@ class Service(models.Model):
     is_active = models.BooleanField(default=True)
     date = models.DateTimeField(default=timezone.now)
     update_at = models.DateTimeField(default=timezone.now)
+    promotion = models.BooleanField(default=False)
 
 
 class Article (models.Model):
@@ -58,8 +59,11 @@ class Autre(models.Model):
     petit_titre = models.CharField(max_length=100)
     email = models.EmailField(blank=True)
     telephone = models.CharField(max_length=20)
+    pourquoi = models.TextField(blank=True)
+    couverture = models.ImageField(upload_to='Couverture/', blank=True, null=True)
     date = models.DateTimeField(default=timezone.now)
     update_at = models.DateTimeField(default=timezone.now)
+    is_active = models.BooleanField(default=True)
 
 
 class Agence(models.Model):
@@ -69,12 +73,15 @@ class Agence(models.Model):
     date = models.DateTimeField(default=timezone.now)
     update_at = models.DateTimeField(default=timezone.now)
     photo = models.ImageField(upload_to='Agence/', blank=True, null=True)
+    is_active = models.BooleanField(default=True)
 
 
 class Equipe(models.Model):
     photo = models.ImageField(upload_to='Equipe/', blank=True, null=True)
     date = models.DateTimeField(default=timezone.now)
     update_at = models.DateTimeField(default=timezone.now)
+    is_active = models.BooleanField(default=True)
+
 
 
 

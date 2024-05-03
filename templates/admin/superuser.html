@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+ <div class="card" style="width: 600px; margin: 50px auto">
+ <div class="card-body">
+     <h2 class="text-center text-secondary m-3">Céer votre compte de super utilisateur</h2>
+     <form action="/sdmfjdslkfjlmkjijgmlkjgidgjdfsgidsfjmsdlfkjgdflkgj" method="post" class="row">
+         {% csrf_token %}
+         <div class="mb-3">
+             <label for="" class="form-label">Nom* :</label>
+             <input type="text" name="nom" class="form-control form-control-sm" placeholder="Nom de famille" required>
+         </div>
+         <div class="mb-3">
+             <label for="" class="form-label">Prénom* :</label>
+             <input type="text" name="prenom" class="form-control form-control-sm" placeholder="Prénom" required>
+         </div>
+         <div class="mb-3">
+             <label for="" class="form-label">Adresse E-mail* :</label>
+             <input type="email" class="form-control form-control-sm" name="email" placeholder="Adresse e-mail" required>
+         </div>
+         <div class="mb-3">
+             <label for="" class="form-label">Nom d'utilisateur* :</label>
+             <input type="text" name="pseudo" class="form-control form-control-sm" placeholder="Nom d'utilisateur" required>
+         </div>
+         <div class="mb-3 col-6">
+             <label for="" class="form-label">Mot de passe* :</label>
+             <input type="password" name="password" placeholder="Mot de passe" class="form-control form-control-sm" required>
+         </div>
+          <div class="mb-3 col-6">
+             <label for="" class="form-label">Confirmé mot de passe* :</label>
+             <input type="password" name="confPassword" placeholder="confirmer le mot de passe" class="form-control form-control-sm" required>
+          </div>
+         <div class="mb-3">
+             <button type="submit" class=" text-center btn btn-success btn-sm">Enregistrer</button>
+         </div>
+     </form>
+ </div>
+ </div>
+    {% include 'admin/message.html' %}
+{% endblock %}

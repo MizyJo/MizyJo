@@ -2,6 +2,7 @@ import json
 import os
 from datetime import datetime, timedelta
 
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User, Group, Permission
 from django.db.models import Count
 from django.http import JsonResponse
@@ -18,49 +19,91 @@ from vitrine.models import Service, Article, Prix, Departement, Apropos, Agence,
 # Create your views here.
 def index(request):
     active_page = 'accueil'
-    article = Article.objects.all()
+    article = Article.objects.filter(is_active=True)
     autre = Autre.objects.get(pk=1)
-    equipe = Equipe.objects.all()
+    equipe = Equipe.objects.filter(is_active=True)
     print(autre)
-    return render(request, 'index.html', {'active_page': active_page, 'article': article, 'autre': autre, 'equipe': equipe})
+    return render(request, 'index.html',
+                  {'active_page': active_page, 'article': article, 'autre': autre, 'equipe': equipe})
+
+
+def superuser(request):
+    return render(request, 'admin/superuser.html')
+
+
+def save_superuser(request):
+    if request.method == 'POST':
+        nom = request.POST.get('nom')
+        prenom = request.POST.get('prenom')
+        email = request.POST.get('email')
+        pseudo = request.POST.get('pseudo')
+        password = request.POST.get('password')
+        conf_password = request.POST.get('confPassword')
+
+        # Vérification que les mots de passe correspondent
+        if password != conf_password or nom == "" or prenom == "" or pseudo == "" or email == "":
+            # Gérer l'erreur ici (redirection, message d'erreur, etc.)
+            return render(request, 'admin/superuser.html', {'error_message': 'Une erreur s\'est produite, veillez bien s\'inscrire'})
+
+        # Création d'un superutilisateur
+        user = User.objects.create(
+            first_name=prenom,
+            last_name=nom,
+            username=pseudo,
+            email=email,
+            password=make_password(password),  # Hasher le mot de passe
+            is_staff=True,  # Définir l'utilisateur comme membre du personnel
+            is_superuser=True  # Définir l'utilisateur comme superutilisateur
+        )
+        user.save()
+        login(request, user)
+        # Gérer la redirection après l'enregistrement réussi
+        return redirect('/dashboard')
+    else:
+        # Gérer le cas où la requête n'est pas POST
+        return redirect('/')
 
 
 def service(request):
-    service = Service.objects.all()
+    service = Service.objects.filter(is_active=True)
     active_page = 'service'
-    base_dir = settings.BASE_DIR
-    return render(request, 'service.html', {'active_page': active_page, 'service': service, 'base_dir': base_dir})
+    autre = Autre.objects.get(pk=1)
+    return render(request, 'service.html', {'active_page': active_page, 'service': service, 'autre': autre})
 
 
 def agence(request):
-    agence = Agence.objects.all()
+    agence = Agence.objects.filter(is_active=True)
     active_page = 'departement'
-    return render(request, 'departement.html', {'active_page': active_page, 'agence': agence})
+    autre = Autre.objects.get(pk=1)
+    return render(request, 'departement.html', {'active_page': active_page, 'agence': agence, 'autre': autre})
 
 
 def tarifs(request):
-    prix = Prix.objects.all()
+    prix = Prix.objects.filter(is_active=True)
     return render(request, 'tarif.html', {'prix': prix})
 
 
 def about(request):
     active_page = 'about'
-    apropos = Apropos.objects.all()
-    return render(request, 'about.html', {'active_page': active_page, 'apropos':  apropos})
+    apropos = Apropos.objects.filter(is_active=True)
+    autre = Autre.objects.get(pk=1)
+    return render(request, 'about.html', {'active_page': active_page, 'apropos': apropos, 'autre': autre})
 
 
 def contact(request):
     active_page = 'contact'
-    return render(request, 'contact.html', {'active_page': active_page})
+    autre = Autre.objects.get(pk=1)
+    return render(request, 'contact.html', {'active_page': active_page, 'autre': autre})
 
 
 def accueil(request):
     active_page = 'accueil'
-    article = Article.objects.all()
+    article = Article.objects.filter(is_active=True)
     autre = Autre.objects.get(pk=1)
-    equipe = Equipe.objects.all()
+    equipe = Equipe.objects.filter(is_active=True)
     print(autre)
-    return render(request, 'index.html', {'active_page': active_page, 'article': article, 'autre': autre, 'equipe': equipe})
+    return render(request, 'index.html',
+                  {'active_page': active_page, 'article': article, 'autre': autre, 'equipe': equipe})
 
 
 def administrateur(request):
@@ -74,14 +117,12 @@ def auth_admin(request):
 @login_required
 def dashboard_admin(request):
     if request.user.is_authenticated:
-        # L'utilisateur est connecté, exécutez le code pour la vue
-        # par exemple, redirigez-le vers une autre page
         service = Service.objects.filter(is_active=True)
         departement = Departement.objects.filter(is_active=True)
-        agence = Agence.objects.all()
+        agence = Agence.objects.filter(is_active=True)
         actualite = Article.objects.filter(is_active=True)
-        apropos = Apropos.objects.all()
-        equipe = Equipe.objects.all()
+        apropos = Apropos.objects.filter(is_active=True)
+        equipe = Equipe.objects.filter(is_active=True)
         active_page = "dashboard"
         return render(request, 'admin/dashboard.html',
                       {'active_page': active_page, 'service': service, 'departement': departement, 'agence': agence,
@@ -142,17 +183,6 @@ def page2(request):
         # par exemple, redirigez-le vers une autre page
         active_page = 'ajout_service'
         return render(request, "admin/ajout_service.html", {'active_page': active_page})
-    else:
-        # L'utilisateur n'est pas connecté, redirigez-le vers la page de connexion
-        return redirect(reverse('administrateur'))
-
-
-@permission_required('vitrine.add_prix')
-def ajout_prix(request):
-    if request.user.is_authenticated:
-        service = Service.objects.all()
-        active_page = 'ajout_prix'
-        return render(request, 'admin/ajout_prix.html', {'active_page': active_page, 'service': service})
     else:
         # L'utilisateur n'est pas connecté, redirigez-le vers la page de connexion
         return redirect(reverse('administrateur'))
@@ -292,30 +322,6 @@ def add_departement(request):
         return redirect('/')
 
 
-@permission_required('vitrine.add_prix')
-def add_prix(request):
-    if request.method == 'POST':
-        nom = request.POST.get('nom')
-        prix = request.POST.get('prix')
-        icone = request.POST.get('icone')
-        print(nom + prix + icone)
-        # Ajoutez vos conditions de validation
-        if nom == "" or prix == "" or icone == "":
-            error_message = "Les champs sont obligatoire."
-            service = Service.objects.all()
-            return render(request, 'admin/ajout_prix.html', {'error_message': error_message, 'service': service})
-        else:
-            # Traitement supplémentaire si les données sont valides
-            Prix.objects.create(nom=nom, prix=prix, icone=icone)
-            service = Service.objects.all()
-            success_message = "Prix ajouté avec succès"
-            return render(request, 'admin/ajout_prix.html', {'success_message': success_message, 'service': service})
-    else:
-        # Affichez le formulaire vide
-        error_message = "methode post obligatoire"
-        return render(request, 'admin/ajout_prix.html', {'message': error_message})
-
-
 def get_service(request):
     if request.method == 'GET':
         # Récupérer l'identifiant de la donnée à partir des paramètres de la requête
@@ -390,8 +396,8 @@ def get_apropos(request):
         return JsonResponse(data)
     else:
         return JsonResponse({'error': 'Méthode non autorisée'}, status=405)
-    
-    
+
+
 def get_actualite(request):
     if request.method == 'GET':
         # Récupérer l'identifiant de la donnée à partir des paramètres de la requête
@@ -580,21 +586,6 @@ def edit_departement(request):
         return JsonResponse({'error': 'Méthode non autorisée'}, status=405)
 
 
-@permission_required('vitrine.delete_prix')
-def supprimer_donnee_prix(request):
-    if request.method == 'POST':
-        # Récupérer l'identifiant de la donnée à supprimer depuis les données de la requête POST
-        id_donnee = request.POST.get('id_prix')
-        # Supprimer l'instance de l'objet
-        instance = get_object_or_404(Prix, id=id_donnee)
-        instance.is_active = False
-        # Répondre avec un JSON pour indiquer que la suppression a réussi
-        return JsonResponse({'success': True})
-    else:
-        # Si la méthode de la requête n'est pas POST, renvoyer une erreur
-        return JsonResponse({'error': 'Méthode non autorisée'}, status=405)
-
-
 @permission_required('vitrine.delete_service')
 def supprimer_donnee_service(request):
     if request.method == 'POST':
@@ -602,7 +593,8 @@ def supprimer_donnee_service(request):
         id_donnee = request.POST.get('id_service')
         # Supprimer l'instance de l'objet
         instance = get_object_or_404(Service, id=id_donnee)
-        instance.delete()
+        instance.is_active = False
+        instance.save()
         # Répondre avec un JSON pour indiquer que la suppression a réussi
         return JsonResponse({'success': True})
     else:
@@ -617,7 +609,8 @@ def supprimer_donnee_departement(request):
         id_donnee = request.POST.get('id_departement')
         # Supprimer l'instance de l'objet
         instance = get_object_or_404(Departement, id=id_donnee)
-        instance.delete()
+        instance.is_active = False
+        instance.save()
         # Répondre avec un JSON pour indiquer que la suppression a réussi
         return JsonResponse({'success': True})
     else:
@@ -632,7 +625,8 @@ def supprimer_donnee_actualite(request):
         id_donnee = request.POST.get('id_actualite')
         # Supprimer l'instance de l'objet
         instance = get_object_or_404(Article, id=id_donnee)
-        instance.delete()
+        instance.is_active = False
+        instance.save()
         # Répondre avec un JSON pour indiquer que la suppression a réussi
         return JsonResponse({'success': True})
     else:
@@ -866,9 +860,13 @@ def delete_groupe(request, id):
 
 def dash_view(request):
     if request.user.is_authenticated:
-
+        agences_actives = Agence.objects.filter(is_active=True)
+        total_agences = Agence.objects.count()
+        print(total_agences)
+        print(agences_actives.count())
+        pourcentage_agences_actives = int((agences_actives.count() / total_agences) * 100) if total_agences != 0 else 0
+        print(pourcentage_agences_actives)
         annee_en_cours = datetime.now().year
-
         # Filtrez les données par année en cours
         data_service = list(
             Service.objects.filter(date__year=annee_en_cours).values('date__month').annotate(total=Count('id')))
@@ -878,10 +876,14 @@ def dash_view(request):
             Departement.objects.filter(date__year=annee_en_cours).values('date__month').annotate(total=Count('id')))
         data_prix = list(
             Prix.objects.filter(date__year=annee_en_cours).values('date__month').annotate(total=Count('id')))
-
+        agence = list(
+            Agence.objects.filter(date__year=annee_en_cours).values('date__month').annotate(total=Count('id')))
+        data_apropos = list(
+            Apropos.objects.filter(date__year=annee_en_cours).values('date__month').annotate(total=Count('id')))
         return render(request, 'admin/stat.html', {
             'data_service': data_service, 'data_actualite': data_actualite, 'data_departement': data_departement,
-            'data_prix': data_prix, 'active_page': 'stat'
+            'data_agence': agence, 'active_page': 'stat', 'data_apropos': data_apropos,
+            'pourcentage': pourcentage_agences_actives
         })
     else:
         return redirect('/administrateur')
@@ -892,9 +894,14 @@ def graphe(request):
         if request.method == "POST":
             graphe = request.POST.get('graphe')
             if graphe == "parMois":
+                agences_actives = Agence.objects.filter(is_active=True)
+                total_agences = Agence.objects.count()
+                print(total_agences)
+                print(agences_actives.count())
+                pourcentage_agences_actives = int((agences_actives.count() / total_agences) * 100) if total_agences != 0 else 0
+                print(pourcentage_agences_actives)
                 # Obtenez l'année actuelle
                 annee_en_cours = datetime.now().year
-
                 # Filtrez les données par année en cours
                 service = list(
                     Service.objects.filter(date__year=annee_en_cours).values('date__month').annotate(total=Count('id')))
@@ -902,43 +909,51 @@ def graphe(request):
                     Article.objects.filter(date__year=annee_en_cours).values('date__month').annotate(total=Count('id')))
                 departement = list(Departement.objects.filter(date__year=annee_en_cours).values('date__month').annotate(
                     total=Count('id')))
-                prix = list(
-                    Prix.objects.filter(date__year=annee_en_cours).values('date__month').annotate(total=Count('id')))
+                agence = list(
+                    Agence.objects.filter(date__year=annee_en_cours).values('date__month').annotate(total=Count('id')))
+                apropos = list(
+                    Apropos.objects.filter(date__year=annee_en_cours).values('date__month').annotate(total=Count('id')))
                 print(departement)
                 return render(request, 'admin/stat.html', {
                     'data_service': service, 'data_actualite': actualite,
                     'data_departement': departement,
-                    'data_prix': prix, 'active_page': 'stat'
+                    'data_agence': agence, 'active_page': 'stat', 'data_apropos': apropos,
+                    'pourcentage': pourcentage_agences_actives
                 })
             elif graphe == "3mois":
                 # Calculer la date d'il y a trois mois
                 date_trois_mois_avant = datetime.now() - timedelta(days=90)
-
                 # Filtrer les contenus en fonction de la date calculée
                 service = Service.objects.filter(date__gte=date_trois_mois_avant)
                 actualite = Article.objects.filter(date__gte=date_trois_mois_avant)
                 departement = Departement.objects.filter(date__gte=date_trois_mois_avant)
-
+                agence = Agence.objects.filter(date__gte=date_trois_mois_avant)
+                apropos = Apropos.objects.filter(date__gte=date_trois_mois_avant)
                 # Grouper les contenus par mois et compter le nombre de contenus pour chaque mois
                 service_par_mois = service.values('date__month').annotate(total=Count('id'))
                 actualite_par_mois = actualite.values('date__month').annotate(total=Count('id'))
                 departement_par_mois = departement.values('date__month').annotate(total=Count('id'))
+                agence_par_mois = agence.values('date__month').annotate(total=Count('id'))
+                apropos_par_mois = apropos.values('date__month').annotate(total=Count('id'))
 
                 # Retourner les données sous forme de JSON
+                data_apropos = [{'mois': service['date__month'], 'nombre_contenus': service['total']} for service in
+                                apropos_par_mois]
                 data_service = [{'mois': service['date__month'], 'nombre_contenus': service['total']} for service in
                                 service_par_mois]
                 data_actualite = [{'mois': service['date__month'], 'nombre_contenus': service['total']} for service
                                   in actualite_par_mois]
                 data_departement = [{'mois': service['date__month'], 'nombre_contenus': service['total']} for
                                     service in departement_par_mois]
-
+                data_agence = [{'mois': agence['date__month'], 'nombre_contenus': agence['total']} for agence in
+                               agence_par_mois]
                 print(data_service)
                 print(data_actualite)
                 print(data_departement)
 
                 return render(request, 'admin/fichier_stat/3mois.html', {
                     'service': data_service, 'actualite': data_actualite, 'departement': data_departement,
-                    'active_page': 'stat', 'graphe_select': '3mois'
+                    'active_page': 'stat', 'graphe_select': '3mois', 'agence': data_agence, 'apropos': data_apropos
                 })
             elif graphe == "3annes":
                 date_actuelle = datetime.now()
@@ -948,11 +963,15 @@ def graphe(request):
                 service = Service.objects.filter(date__gte=date_trois_ans_avant)
                 actualite = Article.objects.filter(date__gte=date_trois_ans_avant)
                 departement = Departement.objects.filter(date__gte=date_trois_ans_avant)
+                agence = Agence.objects.filter(date__gte=date_trois_ans_avant)
+                apropos = Apropos.objects.filter(date__gte=date_trois_ans_avant)
 
                 # Grouper les contenus par année et compter le nombre de contenus pour chaque année
                 service_par_annee = service.values('date__year').annotate(total=Count('id'))
                 actualite_par_annee = actualite.values('date__year').annotate(total=Count('id'))
                 departement_par_annee = departement.values('date__year').annotate(total=Count('id'))
+                agence_par_annee = agence.values('date__year').annotate(total=Count('id'))
+                apropos_par_annee = apropos.values('date__year').annotate(total=Count('id'))
                 # Retourner les données sous forme de JSON
                 data_service = [{'annee': contenu['date__year'], 'nombre_contenus': contenu['total']} for contenu in
                                 service_par_annee]
@@ -960,6 +979,10 @@ def graphe(request):
                                   actualite_par_annee]
                 data_departement = [{'annee': contenu['date__year'], 'nombre_contenus': contenu['total']} for contenu in
                                     departement_par_annee]
+                data_agence = [{'annee': contenu['date__year'], 'nombre_contenus': contenu['total']} for contenu in
+                               agence_par_annee]
+                data_apropos = [{'annee': contenu['date__year'], 'nombre_contenus': contenu['total']} for contenu in
+                                apropos_par_annee]
                 print(data_service)
                 print(data_actualite)
                 print(data_departement)
@@ -968,7 +991,9 @@ def graphe(request):
                     'graphe_select': '3annes',
                     'service': data_service,
                     'actualite': data_actualite,
-                    'departement': data_departement
+                    'departement': data_departement,
+                    'agence': data_agence,
+                    'apropos': data_apropos
                 })
             elif graphe == "anne":
                 annee_actuelle = datetime.now().year
@@ -976,7 +1001,11 @@ def graphe(request):
                 service_cette_annee = Service.objects.filter(date__year=annee_actuelle)
                 departement_cette_annee = Departement.objects.filter(date__year=annee_actuelle)
                 article_cette_annee = Article.objects.filter(date__year=annee_actuelle)
+                agence_cette_annee = Agence.objects.filter(date__year=annee_actuelle)
+                apropos_cette_annee = Apropos.objects.filter(date__year=annee_actuelle)
                 # Compter le nombre total de contenus pour cette année
+                nombre_apropos_cette_annee = apropos_cette_annee.count()
+                nombre_agence_cette_annee = agence_cette_annee.count()
                 nombre_service_cette_annee = service_cette_annee.count()
                 nombre_departement_cette_annee = departement_cette_annee.count()
                 nombre_article_cette_annee = article_cette_annee.count()
@@ -986,7 +1015,9 @@ def graphe(request):
                                                                         'departement': nombre_departement_cette_annee,
                                                                         'actualite': nombre_article_cette_annee,
                                                                         'active_page': 'stat',
-                                                                        'graphe_select': 'anne'
+                                                                        'graphe_select': 'anne',
+                                                                        'agence': nombre_agence_cette_annee,
+                                                                        'apropos': nombre_apropos_cette_annee
                                                                         })
 
 
@@ -1108,7 +1139,6 @@ def add_agence(request):
                     'active_page': active_page,
                     'error_message': "Veillez remplir tous les champs"
                 })
-
         else:
             return redirect('/ajout_agence')
     else:
@@ -1120,6 +1150,10 @@ def titre(request):
     if request.user.is_authenticated and request.method == "POST":
         grand_titre = request.POST.get('grand_titre')
         petit_titre = request.POST.get('petit_titre')
+        pourquoi = request.POST.get('pourquoi')
+        email = request.POST.get('email')
+        telephone = request.POST.get('telephone')
+        photo = request.FILES.get('photo')
 
         if grand_titre:
             instance = Autre.objects.get(pk=1)
@@ -1127,7 +1161,8 @@ def titre(request):
             instance.save()
             autre = Autre.objects.get(pk=1)
             attribute_message = "Modification éfféctué avec succès"
-            return render(request, 'admin/autre.html', {'active_page': 'ajout_autre', 'autre': autre, 'attribute_message': attribute_message})
+            return render(request, 'admin/autre.html',
+                          {'active_page': 'ajout_autre', 'autre': autre, 'attribute_message': attribute_message})
 
         if petit_titre:
             instance = Autre.objects.get(pk=1)
@@ -1135,7 +1170,46 @@ def titre(request):
             instance.save()
             autre = Autre.objects.get(pk=1)
             attribute_message = "Modification éfféctué avec succès"
-            return render(request, 'admin/autre.html', {'active_page': 'ajout_autre', 'autre': autre, 'attribute_message': attribute_message})
+            return render(request, 'admin/autre.html',
+                          {'active_page': 'ajout_autre', 'autre': autre, 'attribute_message': attribute_message})
+
+        if pourquoi:
+            instance = Autre.objects.get(pk=1)
+            instance.pourquoi = pourquoi
+            instance.save()
+            autre = Autre.objects.get(pk=1)
+            attribute_message = "Modification éfféctué avec succès"
+            return render(request, 'admin/autre.html',
+                          {'active_page': 'ajout_autre', 'autre': autre, 'attribute_message': attribute_message})
+
+        if email:
+            instance = Autre.objects.get(pk=1)
+            instance.email = email
+            instance.save()
+            autre = Autre.objects.get(pk=1)
+            attribute_message = "Modification éfféctué avec succès"
+            return render(request, 'admin/autre.html',
+                          {'active_page': 'ajout_autre', 'autre': autre, 'attribute_message': attribute_message})
+
+        if telephone:
+            instance = Autre.objects.get(pk=1)
+            instance.telephone = telephone
+            instance.save()
+            autre = Autre.objects.get(pk=1)
+            attribute_message = "Modification éfféctué avec succès"
+            return render(request, 'admin/autre.html',
+                          {'active_page': 'ajout_autre', 'autre': autre, 'attribute_message': attribute_message})
+        if photo:
+            instance = Autre.objects.get(pk=1)
+            instance.couverture = photo
+            instance.save()
+            autre = Autre.objects.get(pk=1)
+            attribute_message = "Modification éfféctué avec succès"
+            return render(request, 'admin/autre.html',
+                          {'active_page': 'ajout_autre', 'autre': autre, 'attribute_message': attribute_message})
+
+    else:
+        return redirect('/administrateur')
 
 
 @permission_required('vitrine.view_equipe')
@@ -1155,7 +1229,8 @@ def add_equipe(request):
                 equipe = Equipe.objects.create(photo=photo)
                 equipe.save()
                 success_message = "Photo de l'équipe ajouté avec succès"
-                return render(request, 'admin/equipe.html', {'active_page': 'equipe', 'success_message': success_message})
+                return render(request, 'admin/equipe.html',
+                              {'active_page': 'equipe', 'success_message': success_message})
             else:
                 error_message = "L'image est obligaoire"
                 return render(request, 'admin/equipe.html', {'error_message': error_message, 'active_page': 'equipe'})
@@ -1169,14 +1244,15 @@ def add_equipe(request):
 def delete_agence(request, id):
     if request.user.is_authenticated:
         instance = get_object_or_404(Agence, pk=id)
-        instance.delete()
+        instance.is_active = False
+        instance.save()
         active_page = 'dashboard'
-        service = Service.objects.all()
-        departement = Departement.objects.all()
-        article = Article.objects.all()
-        agence = Agence.objects.all()
-        apropos = Apropos.objects.all()
-        equipe = Equipe.objects.all()
+        service = Service.objects.filter(is_active=True)
+        departement = Departement.objects.filter(is_active=True)
+        article = Article.objects.filter(is_active=True)
+        agence = Agence.objects.filter(is_active=True)
+        apropos = Apropos.objects.filter(is_active=True)
+        equipe = Equipe.objects.filter(is_active=True)
 
         context = {
             'active_page': active_page,
@@ -1197,14 +1273,15 @@ def delete_agence(request, id):
 def delete_apropos(request, id):
     if request.user.is_authenticated:
         instance = get_object_or_404(Apropos, pk=id)
-        instance.delete()
+        instance.is_active = False
+        instance.save()
         active_page = 'dashboard'
-        service = Service.objects.all()
-        departement = Departement.objects.all()
-        article = Article.objects.all()
-        agence = Agence.objects.all()
-        apropos = Apropos.objects.all()
-        equipe = Equipe.objects.all()
+        service = Service.objects.filter(is_active=True)
+        departement = Departement.objects.filter(is_active=True)
+        article = Article.objects.filter(is_active=True)
+        agence = Agence.objects.filter(is_active=True)
+        apropos = Apropos.objects.filter(is_active=True)
+        equipe = Equipe.objects.filter(is_active=True)
 
         context = {
             'active_page': active_page,
@@ -1223,14 +1300,15 @@ def delete_apropos(request, id):
 def delete_equipe(request, id):
     if request.user.is_authenticated:
         instance = get_object_or_404(Equipe, pk=id)
-        instance.delete()
+        instance.is_active = False
+        instance.save()
         active_page = 'dashboard'
-        service = Service.objects.all()
-        departement = Departement.objects.all()
-        article = Article.objects.all()
-        agence = Agence.objects.all()
-        apropos = Apropos.objects.all()
-        equipe = Equipe.objects.all()
+        service = Service.objects.filter(is_active=True)
+        departement = Departement.objects.filter(is_active=True)
+        article = Article.objects.filter(is_active=True)
+        agence = Agence.objects.filter(is_active=True)
+        apropos = Apropos.objects.filter(is_active=True)
+        equipe = Equipe.objects.filter(is_active=True)
 
         context = {
             'active_page': active_page,
@@ -1247,11 +1325,204 @@ def delete_equipe(request, id):
         return redirect('/administrateur')
 
 
+@permission_required('vitrine.edit_deparrtement')
+def get_departement_inactive(request):
+    if request.method == "GET":
+        departement = Departement.objects.filter(is_active=False)
+        donnees_json = [{'id': item.id, 'nom': item.nom, 'description': item.description} for item in
+                        departement]  # Modifier les champs selon votre modèle
+        return JsonResponse({'donnees': donnees_json})
 
 
+@permission_required('vitrine.edit_deparrtement')
+def get_departement_inactive(request):
+    if request.method == "GET":
+        departement = Departement.objects.filter(is_active=False)
+        donnees_json = [{'id': item.id, 'nom': item.nom, 'description': item.description} for item in
+                        departement]  # Modifier les champs selon votre modèle
+        return JsonResponse({'donnees': donnees_json})
 
 
+def get_service_inactive(request):
+    if request.method == "GET":
+        service = Service.objects.filter(is_active=False)
+        donnees_json = [{'id': item.id, 'nom': item.nom, 'icone': item.icone, 'description': item.description} for item
+                        in
+                        service]  # Modifier les champs selon votre modèle
+        return JsonResponse({'donnees': donnees_json})
 
 
+def get_actualite_inactive(request):
+    if request.method == "GET":
+        actualite = Article.objects.filter(is_active=False)
+        donnees_json = [{'id': item.id, 'titre': item.titre, 'description': item.description} for item in
+                        actualite]  # Modifier les champs selon votre modèle
+        return JsonResponse({'donnees': donnees_json})
+
+
+def get_agence_inactive(request):
+    if request.method == "GET":
+        agence = Agence.objects.filter(is_active=False)
+        donnees_json = [{'id': item.id, 'nom': item.nom, 'adresse': item.adresse} for item in
+                        agence]  # Modifier les champs selon votre modèle
+        return JsonResponse({'donnees': donnees_json})
+
+
+def get_apropos_inactive(request):
+    if request.method == "GET":
+        apropos = Apropos.objects.filter(is_active=False)
+        donnees_json = [{'id': item.id, 'titre': item.titre, 'icone': item.icone, 'description': item.description} for
+                        item in
+                        apropos]  # Modifier les champs selon votre modèle
+        return JsonResponse({'donnees': donnees_json})
+
+
+def get_equipe_inactive(request):
+    if request.method == "GET":
+        equipe = Equipe.objects.filter(is_active=False)
+        donnees_json = [{'id': item.id, 'photo': item.photo.url} for item in
+                        equipe]  # Modifier les champs selon votre modèle
+        return JsonResponse({'donnees': donnees_json})
+
+
+@permission_required('vitrine.edit_departement')
+def replace_departement(request, id_inactive, id_active):
+    inactive = get_object_or_404(Departement, pk=id_inactive)
+    active = get_object_or_404(Departement, pk=id_active)
+    inactive.is_active = True
+    active.is_active = False
+    inactive.save()
+    active.save()
+    context = {
+        'active_page': 'dashboard',
+        'service': Service.objects.filter(is_active=True),
+        'departement': Departement.objects.filter(is_active=True),
+        'article': Article.objects.filter(is_active=True),
+        'agence': Agence.objects.filter(is_active=True),
+        'apropos': Apropos.objects.filter(is_active=True),
+        'equipe': Equipe.objects.filter(is_active=True),
+        'attribute_message': "Remplacement éfféctuée",
+    }
+    return render(request, 'admin/dashboard.html', context)
+
+
+@permission_required('vitrine.edit_service')
+def replace_service(request, id_inactive, id_active):
+    inactive = get_object_or_404(Service, pk=id_inactive)
+    active = get_object_or_404(Service, pk=id_active)
+    inactive.is_active = True
+    active.is_active = False
+    inactive.save()
+    active.save()
+    context = {
+        'active_page': 'dashboard',
+        'service': Service.objects.filter(is_active=True),
+        'departement': Departement.objects.filter(is_active=True),
+        'article': Article.objects.filter(is_active=True),
+        'agence': Agence.objects.filter(is_active=True),
+        'apropos': Apropos.objects.filter(is_active=True),
+        'equipe': Equipe.objects.filter(is_active=True),
+        'attribute_message': "Remplacement éfféctuée",
+    }
+    return render(request, 'admin/dashboard.html', context)
+
+
+@permission_required('vitrine.edit_agence')
+def replace_agence(request, id_inactive, id_active):
+    inactive = get_object_or_404(Agence, pk=id_inactive)
+    active = get_object_or_404(Agence, pk=id_active)
+    inactive.is_active = True
+    active.is_active = False
+    inactive.save()
+    active.save()
+    context = {
+        'active_page': 'dashboard',
+        'service': Service.objects.filter(is_active=True),
+        'departement': Departement.objects.filter(is_active=True),
+        'article': Article.objects.filter(is_active=True),
+        'agence': Agence.objects.filter(is_active=True),
+        'apropos': Apropos.objects.filter(is_active=True),
+        'equipe': Equipe.objects.filter(is_active=True),
+        'attribute_message': "Remplacement éfféctuée",
+    }
+    return render(request, 'admin/dashboard.html', context)
+
+
+@permission_required('vitrine.edit_article')
+def replace_actualite(request, id_inactive, id_active):
+    inactive = get_object_or_404(Article, pk=id_inactive)
+    active = get_object_or_404(Article, pk=id_active)
+    inactive.is_active = True
+    active.is_active = False
+    inactive.save()
+    active.save()
+    context = {
+        'active_page': 'dashboard',
+        'service': Service.objects.filter(is_active=True),
+        'departement': Departement.objects.filter(is_active=True),
+        'article': Article.objects.filter(is_active=True),
+        'agence': Agence.objects.filter(is_active=True),
+        'apropos': Apropos.objects.filter(is_active=True),
+        'equipe': Equipe.objects.filter(is_active=True),
+        'attribute_message': "Remplacement éfféctuée",
+    }
+    return render(request, 'admin/dashboard.html', context)
+
+
+@permission_required('vitrine.edit_apropos')
+def replace_apropos(request, id_inactive, id_active):
+    inactive = get_object_or_404(Apropos, pk=id_inactive)
+    active = get_object_or_404(Apropos, pk=id_active)
+    inactive.is_active = True
+    active.is_active = False
+    inactive.save()
+    active.save()
+    context = {
+        'active_page': 'dashboard',
+        'service': Service.objects.filter(is_active=True),
+        'departement': Departement.objects.filter(is_active=True),
+        'article': Article.objects.filter(is_active=True),
+        'agence': Agence.objects.filter(is_active=True),
+        'apropos': Apropos.objects.filter(is_active=True),
+        'equipe': Equipe.objects.filter(is_active=True),
+        'attribute_message': "Remplacement éfféctuée",
+    }
+    return render(request, 'admin/dashboard.html', context)
+
+
+@permission_required('vitrine.edit_equipe')
+def replace_equipe(request, id_inactive, id_active):
+        inactive = get_object_or_404(Equipe, pk=id_inactive)
+        active = get_object_or_404(Equipe, pk=id_active)
+        inactive.is_active = True
+        active.is_active = False
+        inactive.save()
+        active.save()
+        context = {
+            'active_page': 'dashboard',
+            'service': Service.objects.filter(is_active=True),
+            'departement': Departement.objects.filter(is_active=True),
+            'article': Article.objects.filter(is_active=True),
+            'agence': Agence.objects.filter(is_active=True),
+            'apropos': Apropos.objects.filter(is_active=True),
+            'equipe': Equipe.objects.filter(is_active=True),
+            'attribute_message': "Remplacement éfféctuée",
+        }
+        return render(request, 'admin/dashboard.html', context)
+
+
+@permission_required('vitrine.change_service')
+def changer_promotion(request, service_id):
+    if request.user.is_authenticated:
+        service = get_object_or_404(Service, pk=service_id)
+        if service.promotion == True:
+            service.promotion = False
+            service.save()
+        else:
+            service.promotion = True
+            service.save()
+        return JsonResponse({'success': True})
+    else:
+        return redirect('/administrateur')
 
 

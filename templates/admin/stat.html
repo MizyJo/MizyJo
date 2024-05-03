@@ -1,6 +1,7 @@
 {% extends 'admin/dashboard.html' %}
 {% block content %}
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2"></script>
+
     <div class="container">
     <div class="row p-2">
           
@@ -21,7 +22,9 @@
             
         </div>
     <div class="row">
-        
+        <div class="col-6">
+                <canvas id="agencesChart" width="400" height="400"></canvas>
+        </div>
         <div class="col-6">
             <canvas id="chart_service" width="400" height="400"></canvas>
         </div>
@@ -32,7 +35,10 @@
             <canvas id="chart_article" width="400" height="400"></canvas>
         </div>
         <div class="col-6">
-            
+            <canvas id="chart_agence" width="400" height="400"></canvas>
+        </div>
+        <div class="col-6">
+            <canvas id="chart_apropos" width="400" height="400"></canvas>
         </div>
     </div>
     </div>
@@ -74,6 +80,72 @@ const chart_departement = new Chart(ctx_departement, {
     datasets: [{
       label: 'Nombre de département introduit par mois',
       data: counts_departement,
+      backgroundColor: 'rgba(229,199,204,0.2)',
+      borderColor: 'rgb(180,185,117)',
+      borderWidth: 1
+    }]
+  },
+  options: {
+    scales: {
+      y: {
+        beginAtZero: true
+      }
+    }
+  }
+});
+// Chart du apropos
+const ctx_apropos = document.getElementById('chart_apropos').getContext('2d');
+const data_apropos = {{ data_apropos|safe }};
+console.log(data_apropos);
+
+const labels_apropos = [];
+const counts_apropos = [];
+
+data_apropos.forEach((donne) => {
+  labels_apropos.push(moisAnnee[donne.date__month]);
+  counts_apropos.push(donne.total);
+});
+
+const chart_apropos = new Chart(ctx_apropos, {
+    type: 'bar',
+    data: {
+        labels: labels_apropos, // Use the contents of the array
+        datasets: [{
+            label: 'Nombre de département introduit par mois',
+            data: counts_apropos,
+            backgroundColor: 'rgba(229,199,204,0.2)',
+            borderColor: 'rgb(180,185,117)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+// Chart du agence
+const ctx_agence = document.getElementById('chart_agence').getContext('2d');
+const data_agence = {{ data_agence|safe }};
+console.log(data_agence);
+
+const labels_agence = [];
+const counts_agence = [];
+
+data_agence.forEach((donne) => {
+  labels_agence.push(moisAnnee[donne.date__month]);
+  counts_agence.push(donne.total);
+});
+
+const chartagence = new Chart(ctx_agence, {
+  type: 'bar',
+  data: {
+    labels: labels_agence, // Use the contents of the array
+    datasets: [{
+      label: 'Nombre de agence introduit par mois',
+      data: counts_agence,
       backgroundColor: 'rgba(229,199,204,0.2)',
       borderColor: 'rgb(180,185,117)',
       borderWidth: 1
@@ -154,6 +226,31 @@ const chart_actualite = new Chart(ctx_article, {
       }
     }
   });
+  
+  //agence active
+   var ctx_agence_active = document.getElementById('agencesChart').getContext('2d');
+        var pourcentage = {{ pourcentage|default:0 }};
+        console.log(pourcentage)
+        var data_agence_active = {
+            labels: ["Agences Actives (%)", "Agences Inactives (%)"],
+            datasets: [{
+                label: 'Pourcentage d\'agences actives',
+                data: [pourcentage, 100 - pourcentage],
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(255, 99, 132, 0.2)',
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(255, 99, 132, 1)',
+                ],
+                borderWidth: 1
+            }]
+        };
+        var myChart = new Chart(ctx_agence_active, {
+            type: 'pie',
+            data: data_agence_active,
+        });
 </script>
 
 {% endblock %}

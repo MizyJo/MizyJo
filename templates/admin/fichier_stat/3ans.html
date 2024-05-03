@@ -32,7 +32,10 @@
             <canvas id="chart_article" width="400" height="400"></canvas>
         </div>
         <div class="col-6">
-
+            <canvas id="chart_agence" width="400" height="400"></canvas>
+        </div>
+        <div class="col-6">
+            <canvas id="chart_apropos" width="400" height="400"></canvas>
         </div>
     </div>
     </div>
@@ -58,8 +61,74 @@ const chart_departement = new Chart(ctx_departement, {
   data: {
     labels: labels_departement, // Use the contents of the array
     datasets: [{
-      label: 'Nombre de département introduit par mois',
+      label: 'Nombre de département des trois derniers années',
       data: counts_departement,
+      backgroundColor: 'rgba(229,199,204,0.2)',
+      borderColor: 'rgb(180,185,117)',
+      borderWidth: 1
+    }]
+  },
+  options: {
+    scales: {
+      y: {
+        beginAtZero: true
+      }
+    }
+  }
+});
+//chart agence
+const ctx_agence = document.getElementById('chart_agence').getContext('2d');
+const data_agence = {{ agence|safe }};
+console.log(data_agence);
+
+const labels_agence = [];
+const counts_agence = [];
+
+data_agence.forEach((donne) => {
+  labels_agence.push(donne.annee);
+  counts_agence.push(donne.nombre_contenus);
+});
+
+const chart_agence = new Chart(ctx_agence, {
+  type: 'bar',
+  data: {
+    labels: labels_agence, // Use the contents of the array
+    datasets: [{
+      label: 'Nombre des agences des trois derniers années',
+      data: counts_agence,
+      backgroundColor: 'rgba(229,199,204,0.2)',
+      borderColor: 'rgb(180,185,117)',
+      borderWidth: 1
+    }]
+  },
+  options: {
+    scales: {
+      y: {
+        beginAtZero: true
+      }
+    }
+  }
+});
+//chart apropos
+const ctx_apropos = document.getElementById('chart_apropos').getContext('2d');
+const data_apropos = {{ apropos|safe }};
+console.log(data_apropos);
+
+const labels_apropos = [];
+const counts_apropos = [];
+
+data_apropos.forEach((donne) => {
+  labels_apropos.push(donne.annee);
+  counts_apropos.push(donne.nombre_contenus);
+});
+
+const chart_apropos = new Chart(ctx_apropos, {
+  type: 'bar',
+  data: {
+    labels: labels_apropos, // Use the contents of the array
+    datasets: [{
+      label: 'Nombre des apropos des trois derniers années',
+      data: counts_apropos,
       backgroundColor: 'rgba(229,199,204,0.2)',
       borderColor: 'rgb(180,185,117)',
       borderWidth: 1
@@ -91,7 +160,7 @@ const chart_actualite = new Chart(ctx_article, {
   data: {
     labels: labels_actualite, // Use the contents of the array
     datasets: [{
-      label: 'Nombre d\'actualité introduit  introduit par mois',
+      label: 'Nombre d\'actualité des trois derniers années',
       data: counts_actualite,
       backgroundColor: 'rgba(229,199,204,0.2)',
       borderColor: 'rgb(180,185,117)',
@@ -125,7 +194,7 @@ const chart_actualite = new Chart(ctx_article, {
     data: {
       labels,
       datasets: [{
-        label: 'Nombre de service introduit par mois',
+        label: 'Nombres des services des trois derniers années',
         data: counts,
         backgroundColor: 'rgba(255, 99, 132, 0.2)',
         borderColor: 'rgba(255, 99, 132, 1)',

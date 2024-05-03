@@ -11,7 +11,9 @@
   <!-- Favicons -->
     <link href="{% static 'assets/img/logo.png' %}" rel="icon">
   <link href="{% static 'assets/img/logo.png' %}" rel="apple-touch-icon">
-
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/5.4.0/collection/components/icon/icon.css">
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
@@ -61,7 +63,7 @@
   <!-- End Header -->
 
   <!-- ======= Hero Section ======= -->
-  <section id="hero" class="d-flex align-items-center">
+  <section id="hero" class="d-flex align-items-center" style="background-image: url('{{ autre.couverture.url }}')">
     <div class="container">
       <h1 id="typed-text"></h1>
       <h2 id="paragraphe"></h2>
@@ -79,10 +81,9 @@
             <div class="content">
               <h3>Pourquoi choisir ARO?</h3>
               <p>
-                Assurance Aro, le leader de l'assurance à Madagascar, propose une gamme complète de produits d'assurance à des tarifs compétitifs et un service client de qualité.
+                  {{ autre.pourquoi }}
               </p>
               <div class="text-center">
-                <a class="more-btn">En savoir plus <i class="bx bx-chevron-right"></i></a>
               </div>
             </div>
           </div>
@@ -117,13 +118,15 @@
       <div style="background-color :#1d5c42;" >
           <div class="section-title">
           <h2 class="text-white">Equipes</h2>
-          <p class="text-white">Quelque image sur les équipes de l'assurances</p>
+          <p class="text-white">Explorez un aperçu captivant de notre équipe chez Assurances ARO.</p>
           </div>
           {% if equipe %}
-          <div class="row p-5 m-1">
+          <div class="row py-5 mx-1">
           {% for donne in equipe %}
               <div class="col-sm-12 col-md-6 col-lg-3">
-                  <img src="{{ donne.photo.url }}" alt="" class="img-fluid m-1  img-equipe">
+               <div>
+                   <img src="{{ donne.photo.url }}" alt="" class=" mb-3 img-fluid m-1  img-equipe" style="height:250px; width:400px" onclick="openModal('{{ donne.photo.url }}')">
+               </div>
               </div>
           {% endfor %}
           </div>
@@ -131,6 +134,10 @@
       </div>
               
       
+  <div id="myModal" class="modal">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <img class="modal-content" id="img01">
+</div>
       <!-- End Why Us Section -->
     <!-- ======= About Section ======= -->
     <!-- End About Section -->
@@ -158,6 +165,21 @@
   <div id="preloader"></div>
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
   <script src="{% static 'assets/js/jquery-3.7.1.min.js' %}"></script>
+  <script>
+    // Fonction pour ouvrir le modal avec l'image
+    function openModal(url) {
+        var modal = document.getElementById('myModal');
+        var modalImg = document.getElementById("img01");
+        modal.style.display = "block";
+        modalImg.src = url;
+    }
+
+    // Fonction pour fermer le modal
+    function closeModal() {
+        var modal = document.getElementById('myModal');
+        modal.style.display = "none";
+    }
+</script>
   <script>
        const panels = document.querySelectorAll(".panel");
       panels.forEach((panel) => {

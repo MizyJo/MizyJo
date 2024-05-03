@@ -1,6 +1,16 @@
 {% extends 'admin/dashboard.html' %}
 {% load static %}
 {% block content %}
+    <script src="https://cdn.tiny.cloud/1/6jm11kcdghmj1z2twro6u33mumti9f9eo9ml40ukh16npm9k/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    
+    <script>
+        tinymce.init({
+            selector:'textarea',
+            forced_root_block : false,
+            plugins: 'advlist autolink lists link image charmap print preview hr anchor pagebreak',
+            toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image'
+        });
+    </script>
      <div class="container">
       <div class="row">
           <div class="col-1">
